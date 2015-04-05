@@ -1,0 +1,17 @@
+[
+  ["1 Nephi",          "nephi-1",  1],
+  ["2 Nephi",          "nephi-1",  2],
+  ["Jacob",            "jacob",    3],
+  ["Enos",             "enos",     4],
+  ["Jarom",            "jarom",    5],
+  ["Omni",             "omni",     6],
+  ["Words of Mormon",  "mormon",   7],
+  ["Mosiah",           "mosiah",   8],
+  ["Alma",             "alma",     9],
+  ["Helaman",          "helaman",  10],
+  ["3 Nephi",          "nephi-2",  11],
+  ["4 Nephi",          "nephi-2",  12],
+  ["Mormon",           "mormon",   13],
+  ["Ether",            "ether",    14],
+  ["Moroni",           "moroni",   15]
+]

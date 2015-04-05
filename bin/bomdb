@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'bomdb/cli/application'
+
+BomDB::Cli::Application.start(ARGV)
