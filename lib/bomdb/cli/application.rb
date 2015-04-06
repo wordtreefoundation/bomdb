@@ -61,7 +61,7 @@ module BomDB
           verse_format = lambda do |book, chapter, verse|
             "[|#{book}#{options[:sep]}#{chapter}:#{verse}|]"
           end
-          body_format = lambda{ |body| body.gsub('-', '|') }
+          body_format = nil
         else
           linesep = options[:linesep]
           if options[:verse]
