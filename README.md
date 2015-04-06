@@ -26,7 +26,7 @@ Moroni 10:34 And now I bid unto all farewell. I soon go to rest in the paradise 
 Suppose we want to remove the book, chapter, and verse headings from the output:
 
 ```bash
-$ bomdb show 1829 --no-book --no-chapter --no-verse
+$ bomdb show 1829 --no-verse
 
 I Nephi having been born of goodly parents, therefore I was taught somewhat in all the learning of my father...
 # ... etc ...

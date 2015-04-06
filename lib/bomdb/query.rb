@@ -16,25 +16,26 @@ module BomDB
       q.where!(:version_name => @edition) if @edition
       q.where!(:verse_heading => nil) unless headings
       q.exclude!(:verses__verse_id => db[:refs].select(:verse_id).where(:ref_name => @exclude)) if @exclude
-      # require 'byebug'; byebug
-      # p q
       q
     end
 
-    def print(book: true, chapter: true, verse: true, sep: ' ')
+    def print(format: nil, sep: ' ', linesep: '\n', io: $stdout)
       shown = false
+      format ||= lambda do |book, chapter, verse|
+        "#{book}#{sep}#{chapter}:#{verse}"
+      end
       query.each do |row|
         shown = true
-        puts [
-          book && row[:book_name] || nil,
-          (chapter || verse) && [
-            chapter && row[:verse_chapter] || nil,
-            verse && row[:verse_number] || nil
-          ].compact.join(":") || nil,
-          row[:content_body]
-        ].compact.join(sep)
+        io.print format[
+          row[:book_name],
+          row[:verse_chapter],
+          row[:verse_number]
+        ]
+        io.print sep
+        io.print row[:content_body]
+        io.print linesep
       end
-      puts "Nothing found" unless shown
+      io.puts "Nothing found" unless shown
     end
   end
 end

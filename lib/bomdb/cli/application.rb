@@ -50,22 +50,34 @@ module BomDB
       end
 
       desc "show EDITION RANGE", "show an edition of the Book of Mormon, or a RANGE of verses"
-      option :book,    :type => :boolean, :default => true, :aliases => [:b]
-      option :chapter, :type => :boolean, :default => true, :aliases => [:c]
-      option :verse,   :type => :boolean, :default => true, :aliases => [:v]
+      option :verse,   :type => :boolean, :default => true
       option :exclude, :type => :string, :aliases => [:x]
       option :sep,     :type => :string,  :default => ' '
+      option :linesep, :type => :string,  :default => '\n'
+      option :"for-alignment", :type => :boolean, :default => false
       def show(edition = '1829', range = nil)
+        if options[:"for-alignment"]
+          linesep = ' '
+          format = lambda do |book, chapter, verse|
+            "[|#{book}#{options[:sep]}#{chapter}:#{verse}|]"
+          end
+        else
+          linesep = options[:linesep]
+          if options[:verse]
+            format = nil
+          else
+            format = lambda{ |b,c,v| '' }
+          end
+        end
         query = BomDB::Query.new(
           edition: edition,
           exclude: options[:exclude]
           # range: range
         )
         query.print(
-          book: options[:book],
-          chapter: options[:chapter],
-          verse: options[:verse],
-          sep: options[:sep]
+          format:  format,
+          sep:     options[:sep],
+          linesep: linesep
         )
       end
 
