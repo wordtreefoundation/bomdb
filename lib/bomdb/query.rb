@@ -19,20 +19,19 @@ module BomDB
       q
     end
 
-    def print(format: nil, sep: ' ', linesep: '\n', io: $stdout)
+    def print(verse_format: nil, body_format: nil, sep: ' ', linesep: '\n', io: $stdout)
       shown = false
-      format ||= lambda do |book, chapter, verse|
-        "#{book}#{sep}#{chapter}:#{verse}"
-      end
+      verse_format ||= lambda{ |book, chapter, verse| "#{book}#{sep}#{chapter}:#{verse}" }
+      body_format ||= lambda{ |body| body }
       query.each do |row|
         shown = true
-        io.print format[
+        io.print verse_format[
           row[:book_name],
           row[:verse_chapter],
           row[:verse_number]
         ]
         io.print sep
-        io.print row[:content_body]
+        io.print body_format[ row[:content_body] ]
         io.print linesep
       end
       io.puts "Nothing found" unless shown

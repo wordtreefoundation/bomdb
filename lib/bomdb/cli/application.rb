@@ -58,16 +58,18 @@ module BomDB
       def show(edition = '1829', range = nil)
         if options[:"for-alignment"]
           linesep = ' '
-          format = lambda do |book, chapter, verse|
+          verse_format = lambda do |book, chapter, verse|
             "[|#{book}#{options[:sep]}#{chapter}:#{verse}|]"
           end
+          body_format = lambda{ |body| body.gsub('-', '|') }
         else
           linesep = options[:linesep]
           if options[:verse]
-            format = nil
+            verse_format = nil
           else
-            format = lambda{ |b,c,v| '' }
+            verse_format = lambda{ |b,c,v| '' }
           end
+          body_format = nil
         end
         query = BomDB::Query.new(
           edition: edition,
@@ -75,7 +77,8 @@ module BomDB
           # range: range
         )
         query.print(
-          format:  format,
+          verse_format: verse_format,
+          body_format: body_format,
           sep:     options[:sep],
           linesep: linesep
         )

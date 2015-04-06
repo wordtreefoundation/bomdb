@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bomdb (0.0.1)
+    bomdb (0.1.0)
       constellation (~> 0.1)
       sequel (~> 4.21)
       sqlite3 (~> 1.3)
