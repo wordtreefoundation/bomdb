@@ -20,6 +20,9 @@ require 'bomdb/config'
 require 'bomdb/schema'
 require 'bomdb/query'
 
+require 'bomdb/diff/dwdiff'
+require 'bomdb/diff/aligner'
+
 require 'bomdb/import/base'
 require 'bomdb/import/result'
 require 'bomdb/import/books'

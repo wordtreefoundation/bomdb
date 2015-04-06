@@ -50,18 +50,16 @@ module BomDB
       end
 
       desc "show EDITION RANGE", "show an edition of the Book of Mormon, or a RANGE of verses"
-      option :verse,   :type => :boolean, :default => true
-      option :exclude, :type => :string, :aliases => [:x]
-      option :sep,     :type => :string,  :default => ' '
-      option :linesep, :type => :string,  :default => '\n'
-      option :"for-alignment", :type => :boolean, :default => false
+      option :verse,   :type => :boolean, :default => true, :description => "show book, chapter, verse annotations"
+      option :exclude, :type => :string, :aliases => [:x], :description => "exclude verses that are references, e.g. Bible-OT references"
+      option :sep,     :type => :string,  :default => ' ', :description => "separator between annotations and content, defaults to ' '"
+      option :linesep, :type => :string,  :default => '\n', :description => "separator between verses. Defaults to newline ('\\n')."
+      option :"for-alignment", :type => :boolean, :default => false, :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
       def show(edition = '1829', range = nil)
+        body_format = nil
         if options[:"for-alignment"]
           linesep = ' '
-          verse_format = lambda do |book, chapter, verse|
-            "[|#{book}#{options[:sep]}#{chapter}:#{verse}|]"
-          end
-          body_format = nil
+          verse_format = verse_format_for_alignment()
         else
           linesep = options[:linesep]
           if options[:verse]
@@ -69,14 +67,12 @@ module BomDB
           else
             verse_format = lambda{ |b,c,v| '' }
           end
-          body_format = nil
         end
-        query = BomDB::Query.new(
+        BomDB::Query.new(
           edition: edition,
           exclude: options[:exclude]
           # range: range
-        )
-        query.print(
+        ).print(
           verse_format: verse_format,
           body_format: body_format,
           sep:     options[:sep],
@@ -99,6 +95,34 @@ module BomDB
           r[:ref_name]
         end
         puts rts.join('\n')
+      end
+
+      desc "align FILE EDITION", "give verse annotations from EDITION to a new Book of Mormon text FILE that lacks verse annotations"
+      option :dwdiff, :type => :string, :default => "/usr/local/bin/dwdiff"
+      option :'edition-only', :type => :boolean, :default => false, :description => "show the alignment-formatted edition output only (useful for debugging)"
+      option :'diff-only', :type => :boolean, :default => false, :description => "show the dwdiff output only (useful for debugging)"
+      def align(file, edition = '1829')
+        io = StringIO.new
+
+        BomDB::Query.new(edition: edition).print(
+          verse_format: verse_format_for_alignment,
+          linesep: ' ',
+          io: io
+        )
+        if options[:'edition-only']
+          puts io.string
+          exit
+        end
+
+        dwdiff = Diff::Dwdiff.new(options[:dwdiff])
+        diff = dwdiff.diff(io.string, File.read(file))
+
+        if options[:'diff-only']
+          puts diff
+          exit
+        end
+
+        puts Diff::Aligner.parse(diff)
       end
 
       private
@@ -139,6 +163,12 @@ module BomDB
           puts "Try again with '--reset'? (NOTE: data may be deleted)"
           # end
           exit -1
+        end
+      end
+
+      def verse_format_for_alignment
+        verse_format = lambda do |book, chapter, verse|
+          "[|#{book} #{chapter}:#{verse}|]"
         end
       end
     end
