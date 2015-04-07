@@ -60,6 +60,7 @@ $ bomdb align my_typed_bom.txt
 1 Nephi 1:2 yea, I make a record in the language of my father, which consists of the learning of the Jews and the language of the Egyptians. 
 1 Nephi 1:3 And I know that the record which I make  is true; and I make it with mine own hand; and I make it according to my knowledge. 
 # ... shows 6601 more verses
+```
 
 Note that `align` requires the [dwdiff](http://linux.die.net/man/1/dwdiff) command on your system.
 
