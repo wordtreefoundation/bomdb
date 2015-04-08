@@ -4,57 +4,80 @@ require 'bomdb'
 module BomDB
   module Cli
     class Application < Thor
-      desc "import TYPE", "import data of TYPE into database, e.g. books"
-      option :reset, :type => :boolean, :default => false
-      def import(type, file=nil)
-        case type.downcase
-        when 'books'          
-          result = import_books(file, options[:reset])
-          show_result_and_maybe_exit(result)
-        when 'verses'
-          result = import_verses(file, options[:reset])
-          show_result_and_maybe_exit(result)
-        when 'biblical-refs'
-          result = import_biblical_refs(true)
-          show_result_and_maybe_exit(result)
+      desc "import FILE", "import data from FILE into database, e.g. books.json"
+      option :reset,  :type => :boolean, :default => false
+      option :type,   :type => :string,  :default => nil
+      option :format, :type => :string,  :default => 'json'
+      def import(file)
+        type   = (options[:type]   || type_from_file(file)).downcase
+        format = (options[:format] || format_from_file(file)).downcase
+
+        importer =
+        case type
+        when 'books'    then BomDB::Import::Books.new(BomDB.db)
+        when 'verses'   then BomDB::Import::Verses.new(BomDB.db)
+        when 'contents' then BomDB::Import::Contents.new(BomDB.db)
+        when 'refs'     then BomDB::Import::Refs.new(BomDB.db)
         else
           puts "Unknown import type #{type}"
           exit -1
         end
+
+        result = importer.import(read(file), format: format)
+        show_result_and_maybe_exit(result)
       end
 
-      desc "build", "[delete and re-]build the database"
-      option :delete, :type => :boolean, :default => false, :aliases => [:y]
-      def build
-        dbp = BomDB.config.db_path
-        if File.exist?(dbp) and !options[:delete]
-          puts "Database file '#{dbp}' exists. Delete? (y/N) "
+      desc "create", "create a new Book of Mormon database"
+      option :file, :type => :string, :default => BomDB.config.db_path,
+             :description => "the filepath of the database file on disk"
+      option :bare, :type => :boolean, :default => false,
+             :description => "create a bare database without any data"
+      option :delete, :type => :boolean, :default => false, :aliases => [:y],
+             :description => "don't ask for confirmation before overwriting an existing database"
+      def create
+        db_path = options[:file]
+
+        if File.exist?(db_path) and !options[:delete]
+          puts "Database file '#{db_path}' exists. Delete? (y/N) "
           if $stdin.gets.chomp.downcase != "y"
             puts "Exiting..."
             exit -1
           end
+          verbing = 'Overwriting'
+        else
+          verbing = 'Creating'
         end
 
-        # Delete the database
-        FileUtils.rm(dbp)
+        puts "#{verbing} database '#{db_path}' ..."
+        schema = BomDB::Schema.create(db_path)
+        puts "Created the following tables:"
+        schema.db.tables.each{ |t| puts "\t#{t}" }
 
-        puts "Importing books..."
-        show_result_and_maybe_exit(import_books(nil, true))
+        unless options[:bare]
+          puts "Importing books..."
+          import('books.json')
 
-        puts "Importing verses..."
-        show_result_and_maybe_exit(import_verses(nil, true))
+          puts "Importing verses..."
+          import('verses.json')
 
-        puts "Importing biblical refs..."
-        show_result_and_maybe_exit(import_biblical_refs(true))
+          puts "Importing biblical refs..."
+          import('refs.json')
+        end
 
+        puts "Done."
       end
 
       desc "show EDITION RANGE", "show an edition of the Book of Mormon, or a RANGE of verses"
-      option :verse,   :type => :boolean, :default => true, :description => "show book, chapter, verse annotations"
-      option :exclude, :type => :string, :aliases => [:x], :description => "exclude verses that are references, e.g. Bible-OT references"
-      option :sep,     :type => :string,  :default => ' ', :description => "separator between annotations and content, defaults to ' '"
-      option :linesep, :type => :string,  :default => '\n', :description => "separator between verses. Defaults to newline ('\\n')."
-      option :"for-alignment", :type => :boolean, :default => false, :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
+      option :verse,   :type => :boolean, :default => true,
+             :description => "show book, chapter, verse annotations"
+      option :exclude, :type => :string, :aliases => [:x],
+             :description => "exclude verses that are references, e.g. Bible-OT references"
+      option :sep,     :type => :string,  :default => ' ',
+             :description => "separator between annotations and content, defaults to ' '"
+      option :linesep, :type => :string,  :default => '\n',
+             :description => "separator between verses. Defaults to newline ('\\n')."
+      option :"for-alignment", :type => :boolean, :default => false,
+             :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
       def show(edition = '1829', range = nil)
         body_format = nil
         if options[:"for-alignment"]
@@ -83,8 +106,8 @@ module BomDB
       desc "editions", "list available editions of the Book of Mormon"
       # option :available, :type => :boolean, :default => true
       def editions
-        eds = BomDB.db[:versions].map do |r|
-          [r[:version_year], r[:version_name]].join(' -- ')
+        eds = BomDB.db[:editions].map do |r|
+          [r[:edition_year], r[:edition_name]].join(' -- ')
         end
         puts eds.join('\n')
       end
@@ -98,9 +121,12 @@ module BomDB
       end
 
       desc "align FILE EDITION", "give verse annotations from EDITION to a new Book of Mormon text FILE that lacks verse annotations"
-      option :dwdiff, :type => :string, :default => "/usr/local/bin/dwdiff"
-      option :'edition-only', :type => :boolean, :default => false, :description => "show the alignment-formatted edition output only (useful for debugging)"
-      option :'diff-only', :type => :boolean, :default => false, :description => "show the dwdiff output only (useful for debugging)"
+      option :dwdiff, :type => :string, :default => "/usr/local/bin/dwdiff",
+             :description => "the filepath of the dwdiff binary (shell command)"
+      option :'edition-only', :type => :boolean, :default => false,
+             :description => "show the alignment-formatted edition output only (useful for debugging)"
+      option :'diff-only', :type => :boolean, :default => false,
+             :description => "show the dwdiff output only (useful for debugging)"
       def align(file, edition = '1829')
         io = StringIO.new
 
@@ -128,47 +154,54 @@ module BomDB
       private
 
       def datafile(file)
-        File.join(BomDB.config.data_dir, file)
+        
       end
 
-      def import_books(file, reset = true)
-        data = File.read(file || datafile("books.json"))
-
-        import = BomDB::Import::Books.new(BomDB.db)
-        import.reset if reset
-
-        import.json(data)
+      def read(file)
+        File.read(relative_or_data_file(file))
       end
 
-      def import_verses(file, reset = true)
-        data = File.read(file || datafile("verses.json"))
-
-        import = BomDB::Import::Verses.new(BomDB.db)
-        import.reset if reset
-
-        import.json(data)
+      def relative_or_data_file(file)
+        if File.exist?(file)
+          file
+        else
+          if File.basename(file) == file
+            # Try our gem's data directory as a fallback for this file
+            File.join(BomDB.config.data_dir, file)
+          else
+            $stderr.puts "File not found: #{file}"
+            exit -1
+          end
+        end
       end
 
-      def import_biblical_refs(reset = true)
-        import = BomDB::Import::BiblicalRefs.new(BomDB.db)
-        import.reset if reset
-
-        import.import
-      end
-
-      def show_result_and_maybe_exit(result)
-        if !result.success?
-          puts result.message
-          # if result.error.is_a?(Sequel::UniqueConstraintViolation)
-          puts "Try again with '--reset'? (NOTE: data may be deleted)"
-          # end
+      def format_from_file(file)
+        case File.extname(file).downcase
+        when ".txt" then "text"
+        when ".json" then "json"
+        else
+          $stderr.puts "Unable to determine format from file: #{file}"
           exit -1
         end
+      end
+
+      def type_from_file(file)
+        type = File.basename(file).gsub(/\.(txt|json)$/, '').downcase
       end
 
       def verse_format_for_alignment
         verse_format = lambda do |book, chapter, verse|
           "[|#{book} #{chapter}:#{verse}|]"
+        end
+      end
+
+      def show_result_and_maybe_exit(result)
+        if result.success?
+          $stderr.puts "Success"
+        else
+          $stderr.puts result.message
+          # $stderr.puts "Try again with '--reset'? (NOTE: data may be deleted)"
+          exit -1
         end
       end
     end

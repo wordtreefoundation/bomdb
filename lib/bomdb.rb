@@ -15,6 +15,8 @@ module BomDB
   end
 end
 
+require 'byebug'
+
 require 'bomdb/version'
 require 'bomdb/config'
 require 'bomdb/schema'
@@ -27,4 +29,5 @@ require 'bomdb/import/base'
 require 'bomdb/import/result'
 require 'bomdb/import/books'
 require 'bomdb/import/verses'
-require 'bomdb/import/biblical_refs'
+require 'bomdb/import/contents'
+require 'bomdb/import/refs'

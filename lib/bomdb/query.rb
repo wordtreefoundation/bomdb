@@ -1,22 +1,27 @@
 module BomDB
   class Query
-    def initialize(edition:, exclude: nil)
+    def initialize(edition:, exclude: nil, headings: false)
       @edition = edition
       @exclude = exclude
+      @headings = headings
     end
 
-    def query(headings: false)
+    def query
       db = BomDB.db
       q = db[:verses].
         join(:books, :book_id => :book_id).
-        join(:versions).
-        join(:contents, :version_id => :version_id, :verse_id => :verses__verse_id).
+        join(:editions).
+        join(:contents, :edition_id => :edition_id, :verse_id => :verses__verse_id).
         order(:book_sort, :verse_heading, :verse_chapter, :verse_number).
         select(:book_name, :verse_chapter, :verse_number, :content_body)
-      q.where!(:version_name => @edition) if @edition
-      q.where!(:verse_heading => nil) unless headings
+      q.where!(:edition_name => @edition) if @edition
+      q.where!(:verse_heading => nil) unless @headings
       q.exclude!(:verses__verse_id => db[:refs].select(:verse_id).where(:ref_name => @exclude)) if @exclude
       q
+    end
+
+    def each(&block)
+      query.each(&block)
     end
 
     def print(verse_format: nil, body_format: nil, sep: ' ', linesep: '\n', io: $stdout)
