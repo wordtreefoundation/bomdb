@@ -1,3 +1,5 @@
+require 'bomdb/models/verse'
+
 module BomDB
   module Import
     class Contents < Import::Base
@@ -12,7 +14,11 @@ module BomDB
             book = find_book(book_name)
             return book if book.is_a?(Import::Result)
 
-            verse_id = find_or_create_verse(book[:book_id], chapter, verse)
+            verse_id = Models::Verse.new(@db).find_or_create(
+              chapter: chapter,
+              verse: verse,
+              book_id: book[:book_id]
+            )
 
             @db[:contents].insert(
               edition_id:   edition_id,
@@ -32,8 +38,12 @@ module BomDB
               book = find_book(book_name)
               return book if book.is_a?(Import::Result)
 
-              verse_id = find_or_create_verse(book[:book_id],
-                m['chapter'], m['verse'], m['heading'])
+              verse_id = Models::Verse.new(@db).find_or_create(
+                chapter: m['chapter'],
+                verse: m['verse'],
+                book_id: book[:book_id],
+                heading: m['heading']
+              )
 
               ed_id = edition_id || find_or_create_edition(year)
 
@@ -59,22 +69,6 @@ module BomDB
         else
           book
         end
-      end
-
-      def find_or_create_verse(book_id, chapter, verse_number, heading = false)
-        verse = @db[:verses].where(
-          :book_id => book_id,
-          :verse_chapter => chapter,
-          :verse_number  => verse_number,
-          :verse_heading => heading ? 0 : nil
-        ).first
-        verse_id = (verse && verse[:verse_id]) || @db[:verses].insert(
-          book_id: book_id,
-          verse_chapter: chapter,
-          verse_number:  verse_number,
-          verse_heading: heading ? 0 : nil
-        )
-        return verse_id
       end
 
       def find_or_create_edition(year, name = nil)

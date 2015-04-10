@@ -1,9 +1,13 @@
 require 'thor'
 require 'bomdb'
+require 'colorize'
 
 module BomDB
   module Cli
     class Application < Thor
+
+
+
       desc "import FILE", "import data from FILE into database, e.g. books.json"
       option :reset,  :type => :boolean, :default => false
       option :type,   :type => :string,  :default => nil
@@ -16,6 +20,7 @@ module BomDB
         case type
         when 'books'    then BomDB::Import::Books.new(BomDB.db)
         when 'verses'   then BomDB::Import::Verses.new(BomDB.db)
+        when 'editions' then BomDB::Import::Editions.new(BomDB.db)
         when 'contents' then BomDB::Import::Contents.new(BomDB.db)
         when 'refs'     then BomDB::Import::Refs.new(BomDB.db)
         else
@@ -26,6 +31,8 @@ module BomDB
         result = importer.import(read(file), format: format)
         show_result_and_maybe_exit(result)
       end
+
+
 
       desc "create", "create a new Book of Mormon database"
       option :file, :type => :string, :default => BomDB.config.db_path,
@@ -60,33 +67,46 @@ module BomDB
           puts "Importing verses..."
           import('verses.json')
 
-          puts "Importing biblical refs..."
+          puts "Importing contents..."
+          import('contents.json')
+
+          puts "Importing refs..."
           import('refs.json')
         end
 
         puts "Done."
       end
 
+
+
       desc "show EDITION RANGE", "show an edition of the Book of Mormon, or a RANGE of verses"
       option :verse,   :type => :boolean, :default => true,
              :description => "show book, chapter, verse annotations"
       option :exclude, :type => :string, :aliases => [:x],
              :description => "exclude verses that are references, e.g. Bible-OT references"
-      option :sep,     :type => :string,  :default => ' ',
+      option :sep,     :type => :string,  :default => " ",
              :description => "separator between annotations and content, defaults to ' '"
-      option :linesep, :type => :string,  :default => '\n',
+      option :linesep, :type => :string,  :default => "\n",
              :description => "separator between verses. Defaults to newline ('\\n')."
+      option :color,   :type => :boolean, :default => false,
+             :description => "show chapter and verse in color"
       option :"for-alignment", :type => :boolean, :default => false,
              :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
       def show(edition = '1829', range = nil)
         body_format = nil
         if options[:"for-alignment"]
-          linesep = ' '
-          verse_format = verse_format_for_alignment()
+          linesep = " "
+          verse_format = verse_format_for_alignment(options[:color])
         else
           linesep = options[:linesep]
           if options[:verse]
-            verse_format = nil
+            if options[:color]
+              verse_format = lambda{ |b,c,v| b.colorize(:yellow) + ' ' + 
+                                             c.to_s.colorize(:green) + ':' + 
+                                             v.to_s.colorize(:light_green) }
+            else
+              verse_format = nil
+            end
           else
             verse_format = lambda{ |b,c,v| '' }
           end
@@ -103,22 +123,35 @@ module BomDB
         )
       end
 
+
+
       desc "editions", "list available editions of the Book of Mormon"
       # option :available, :type => :boolean, :default => true
       def editions
         eds = BomDB.db[:editions].map do |r|
           [r[:edition_year], r[:edition_name]].join(' -- ')
         end
-        puts eds.join('\n')
+        puts eds.join("\n")
       end
 
-      desc "reference-types", "list reference types"
-      def reference_types
-        rts = BomDB.db[:refs].distinct.select(:ref_name).map do |r|
-          r[:ref_name]
+
+
+      desc "references TYPE", "list reference types or references of TYPE"
+      def references(type=nil)
+        if type.nil?
+          rts = BomDB.db[:refs].
+            select_group(:ref_name).
+            select_append{ Sequel.as(count(ref_id), :count) }.
+            map { |r| "#{r[:ref_name]} (#{r[:count]} refs)" }
+          puts rts.join("\n")
+        else
+          rts = BomDB.db[:refs].where(:ref_name => type).
+            map{ |r| "#{r[:ref_book]} #{r[:ref_chapter]}:#{r[:ref_verse]}" }
+          puts rts.join("\n")
         end
-        puts rts.join('\n')
       end
+
+
 
       desc "align FILE EDITION", "give verse annotations from EDITION to a new Book of Mormon text FILE that lacks verse annotations"
       option :dwdiff, :type => :string, :default => "/usr/local/bin/dwdiff",
@@ -150,6 +183,8 @@ module BomDB
 
         puts Diff::Aligner.parse(diff)
       end
+
+
 
       private
 

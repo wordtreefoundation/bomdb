@@ -24,10 +24,10 @@ module BomDB
       query.each(&block)
     end
 
-    def print(verse_format: nil, body_format: nil, sep: ' ', linesep: '\n', io: $stdout)
+    def print(verse_format: nil, body_format: nil, sep: ' ', linesep: "\n", io: $stdout)
       shown = false
       verse_format ||= lambda{ |book, chapter, verse| "#{book}#{sep}#{chapter}:#{verse}" }
-      body_format ||= lambda{ |body| body }
+      body_format ||= lambda{ |body| body + linesep }
       query.each do |row|
         shown = true
         io.print verse_format[
@@ -37,7 +37,6 @@ module BomDB
         ]
         io.print sep
         io.print body_format[ row[:content_body] ]
-        io.print linesep
       end
       io.puts "Nothing found" unless shown
     end

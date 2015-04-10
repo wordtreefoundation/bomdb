@@ -43,8 +43,8 @@ module BomDB
       @db.create_table(:editions) do
         primary_key :edition_id
 
-        string      :edition_name
         integer     :edition_year
+        string      :edition_name, :unique => true
       end if include?(tables, :editions)
 
       @db.create_table(:contents) do
