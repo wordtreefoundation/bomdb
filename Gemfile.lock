@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     bomdb (0.1.0)
+      colorize (~> 0.7)
       constellation (~> 0.1)
       sequel (~> 4.21)
       sqlite3 (~> 1.3)
@@ -12,6 +13,7 @@ GEM
   specs:
     byebug (4.0.5)
       columnize (= 0.9.0)
+    colorize (0.7.5)
     columnize (0.9.0)
     constellation (0.1.1)
       multi_json
