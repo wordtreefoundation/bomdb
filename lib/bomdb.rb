@@ -32,3 +32,8 @@ require 'bomdb/import/verses'
 require 'bomdb/import/editions'
 require 'bomdb/import/contents'
 require 'bomdb/import/refs'
+
+require 'bomdb/export/base'
+require 'bomdb/export/result'
+require 'bomdb/export/books'
+require 'bomdb/export/verses'

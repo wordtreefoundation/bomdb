@@ -9,7 +9,6 @@ module BomDB
 
 
       desc "import FILE", "import data from FILE into database, e.g. books.json"
-      option :reset,  :type => :boolean, :default => false
       option :type,   :type => :string,  :default => nil
       option :format, :type => :string,  :default => 'json'
       def import(file)
@@ -30,6 +29,33 @@ module BomDB
 
         result = importer.import(read(file), format: format)
         show_result_and_maybe_exit(result)
+      end
+
+
+
+      desc "export TYPE", "export data from the database, e.g. books"
+      option :format, :type => :string,  :default => 'json'
+      def export(type)
+        format = options[:format].downcase
+
+        exporter =
+        case type
+        when 'books'    then BomDB::Export::Books.new(BomDB.db)
+        when 'verses'   then BomDB::Export::Verses.new(BomDB.db)
+        # when 'editions' then BomDB::Export::Editions.new(BomDB.db)
+        when 'contents' then BomDB::Export::Contents.new(BomDB.db)
+        # when 'refs'     then BomDB::Export::Refs.new(BomDB.db)
+        else
+          puts "Unknown import type #{type}"
+          exit -1
+        end
+
+        result = exporter.export(format: format)
+        if result.success?
+          puts result.to_s
+        else
+          show_result_and_maybe_exit(result)
+        end
       end
 
 
@@ -66,6 +92,9 @@ module BomDB
 
           puts "Importing verses..."
           import('verses.json')
+
+          puts "Importing editions..."
+          import('editions.json')
 
           puts "Importing contents..."
           import('contents.json')
@@ -128,9 +157,11 @@ module BomDB
       desc "editions", "list available editions of the Book of Mormon"
       # option :available, :type => :boolean, :default => true
       def editions
-        eds = BomDB.db[:editions].map do |r|
-          [r[:edition_year], r[:edition_name]].join(' -- ')
-        end
+        eds = BomDB.db[:editions].
+          join(:contents, :edition_id => :edition_id).
+          select_group(:edition_name).
+          select_append{ Sequel.as(count(:verse_id), :count) }.
+          map { |r| "#{r[:edition_name]} (#{r[:count]} verses)" }
         puts eds.join("\n")
       end
 
