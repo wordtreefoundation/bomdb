@@ -1,14 +1,17 @@
 module BomDB
   module Export
     class Base
-      def initialize(db)
+      attr_reader :db, :opts
+
+      def initialize(db, **opts)
         @db = db
+        @opts = opts
       end
 
       def export(format: 'json', **options)
         case format
-        when 'json' then export_json(**options)
-        when 'text' then export_text(**options)
+        when 'json' then export_json
+        when 'text' then export_text
         else
           return Import::Result.new(
             success: false,

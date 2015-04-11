@@ -3,7 +3,7 @@ require 'json'
 module BomDB
   module Export
     class Verses < Export::Base
-      def export_json(**args)
+      def export_json
         verses = []
         @db[:verses].join(:books, :book_id => :book_id).
           where(:verse_heading => nil).

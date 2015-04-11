@@ -3,6 +3,8 @@ require 'json'
 module BomDB
   module Import
     class Base
+      attr_reader :db
+
       def initialize(db)
         @db = db
       end

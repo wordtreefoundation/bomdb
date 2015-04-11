@@ -35,6 +35,7 @@ module BomDB
 
       desc "export TYPE", "export data from the database, e.g. books"
       option :format, :type => :string,  :default => 'json'
+      option :editions, :type => :string, :default => :all
       def export(type)
         format = options[:format].downcase
 
@@ -42,8 +43,8 @@ module BomDB
         case type
         when 'books'    then BomDB::Export::Books.new(BomDB.db)
         when 'verses'   then BomDB::Export::Verses.new(BomDB.db)
-        # when 'editions' then BomDB::Export::Editions.new(BomDB.db)
-        when 'contents' then BomDB::Export::Contents.new(BomDB.db)
+        when 'editions' then BomDB::Export::Editions.new(BomDB.db)
+        when 'contents' then BomDB::Export::Contents.new(BomDB.db, edition_prefixes: options[:editions])
         # when 'refs'     then BomDB::Export::Refs.new(BomDB.db)
         else
           puts "Unknown import type #{type}"
@@ -155,13 +156,14 @@ module BomDB
 
 
       desc "editions", "list available editions of the Book of Mormon"
-      # option :available, :type => :boolean, :default => true
+      option :all, :type => :boolean, :default => false
       def editions
         eds = BomDB.db[:editions].
-          join(:contents, :edition_id => :edition_id).
+          left_outer_join(:contents, :edition_id => :edition_id).
           select_group(:edition_name).
           select_append{ Sequel.as(count(:verse_id), :count) }.
-          map { |r| "#{r[:edition_name]} (#{r[:count]} verses)" }
+          order(:edition_name).
+          map { |r| "#{r[:count]} verses\t#{r[:edition_name]}" }
         puts eds.join("\n")
       end
 
