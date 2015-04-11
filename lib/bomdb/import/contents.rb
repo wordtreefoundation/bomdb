@@ -1,12 +1,20 @@
 require 'bomdb/models/verse'
+require 'bomdb/models/edition'
 
 module BomDB
   module Import
     class Contents < Import::Base
       tables :books, :verses, :editions, :contents
-      DEFAULT_VERSE_RE = /^\s*(.+)(\d+):(\d+)\s*(.*)$/
+      DEFAULT_VERSE_CONTENT_RE = /^\s*(.+)(\d+):(\d+)\s*(.*)$/
+      DEFAULT_VERSE_REF_RE = /^([^:]+)\s+(\d+):(\d+)$/
 
-      def import_text(data, edition_id:, verse_re: DEFAULT_VERSE_RE, **args)
+      def import_text(data)
+        if opts[:edition_id].nil?
+          raise ArgumentError, "Edition is required for text import of contents"
+        end
+
+        verse_re = opts[:verse_re] || DEFAULT_VERSE_CONTENT_RE
+
         data.each_line do |line|
           if line =~ verse_re
             book_name, chapter, verse, content = $1, $2, $3, $4
@@ -21,7 +29,7 @@ module BomDB
             )
 
             @db[:contents].insert(
-              edition_id:   edition_id,
+              edition_id:   opts[:edition_id],
               verse_id:     verse_id,
               content_body: content
             )
@@ -29,7 +37,51 @@ module BomDB
         end
       end
 
-      def import_json(data, edition_id: nil, **args)
+      def import_json(data)
+        # this cross-ref is for looking up file-edition-id => database-edition-id
+        editions_xref = {}
+
+        ed_model = Models::Edition.new(@db)
+        verse_model = Models::Verse.new(@db)
+
+        data['editions'].each_pair do |id, e|
+          editions_xref[ id ] = ed_model.find_or_create(e["year"].to_i, e["name"])
+        end
+
+        data['contents'].each_pair do |book_name, chapters|
+          chapters.each_pair do |chapter, verses|
+            verses.each_pair do |verse_full_ref, editions|
+              match = DEFAULT_VERSE_REF_RE.match(verse_full_ref)
+              if match
+                verse_number = match[3].to_i
+                verse = verse_model.find(
+                  book_name: book_name,
+                  chapter: chapter,
+                  verse: verse_number
+                )
+                if verse.nil?
+                  return Import::Result.new(success: false,
+                    error: "Unable to find verse: book: " +
+                           "'#{book_name}', chapter: '#{chapter}', " +
+                           "verse: '#{verse_number}'")
+                end
+                editions.each_pair do |file_edition_id, content_body|
+                  @db[:contents].insert(
+                    edition_id: editions_xref[ file_edition_id ],
+                    verse_id: verse[:verse_id],
+                    content_body: content_body
+                  )
+                end
+              else
+                $stderr.puts "Unable to parse verse ref from '#{verse_full_ref}', skipping"
+              end
+            end
+          end
+        end
+        Import::Result.new(success: true)
+      end
+
+      def import_json_old(data)
         data.each_pair do |book_name, year_editions|
           year_editions.each do |year_edition|
             year_edition.each_pair do |year, d|
@@ -45,7 +97,7 @@ module BomDB
                 heading: m['heading']
               )
 
-              ed_id = edition_id || find_or_create_edition(year)
+              ed_id = opts[:edition_id] || find_or_create_edition(year)
 
               @db[:contents].insert(
                 edition_id:   ed_id,

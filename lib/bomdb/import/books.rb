@@ -10,7 +10,7 @@ module BomDB
       #   [book_name:String, book_group:String, book_sort:Integer],
       #   ...
       # ]
-      def import_json(data, **args)
+      def import_json(data)
         data.each do |name, group, sort|
           @db[:books].insert(
             book_name: name,

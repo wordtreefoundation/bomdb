@@ -3,10 +3,11 @@ require 'json'
 module BomDB
   module Import
     class Base
-      attr_reader :db
+      attr_reader :db, :opts
 
-      def initialize(db)
+      def initialize(db, **opts)
         @db = db
+        @opts = opts
       end
 
       def self.tables(*tables)
@@ -17,7 +18,7 @@ module BomDB
         self.class.instance_variable_get("@tables")
       end
 
-      def import(data, format: 'json', **options)
+      def import(data, format: 'json')
         if !schema.has_tables?(tables)
           return Import::Result.new(
             success: false,
@@ -26,8 +27,8 @@ module BomDB
         end
 
         case format
-        when 'json' then import_json(ensure_parsed_json(data), **options)
-        when 'text' then import_text(data, **options)
+        when 'json' then import_json(ensure_parsed_json(data))
+        when 'text' then import_text(data)
         else
           return Import::Result.new(
             success: false,

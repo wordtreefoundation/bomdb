@@ -118,7 +118,7 @@ module BomDB
              :description => "separator between annotations and content, defaults to ' '"
       option :linesep, :type => :string,  :default => "\n",
              :description => "separator between verses. Defaults to newline ('\\n')."
-      option :color,   :type => :boolean, :default => false,
+      option :color,   :type => :boolean, :default => true,
              :description => "show chapter and verse in color"
       option :"for-alignment", :type => :boolean, :default => false,
              :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."

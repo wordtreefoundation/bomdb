@@ -1,3 +1,5 @@
+require 'bomdb/models/edition'
+
 module BomDB
   class Query
     def initialize(edition:, exclude: nil, headings: false)
@@ -8,13 +10,18 @@ module BomDB
 
     def query
       db = BomDB.db
+      edition_model = Models::Edition.new(db)
+      edition = edition_model.find(@edition)
+      if edition.nil?
+        raise "Unable to find edition: #{@edition}"
+      end
       q = db[:verses].
         join(:books, :book_id => :book_id).
         join(:editions).
         join(:contents, :edition_id => :edition_id, :verse_id => :verses__verse_id).
         order(:book_sort, :verse_heading, :verse_chapter, :verse_number).
         select(:book_name, :verse_chapter, :verse_number, :content_body)
-      q.where!(:edition_name => @edition) if @edition
+      q.where!(:editions__edition_id => edition[:edition_id]) if @edition
       q.where!(:verse_heading => nil) unless @headings
       q.exclude!(:verses__verse_id => db[:refs].select(:verse_id).where(:ref_name => @exclude)) if @exclude
       q
