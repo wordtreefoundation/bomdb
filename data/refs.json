@@ -1,4 +1,8 @@
 {
+  "Bible-NT": [
+    {"book":"2 Nephi","chapter":28,"verse":7,"ref_book":"1 Corinthians","ref_chapter":15,"ref_verse":32,"is_parallel":false,"is_quotation":true},
+    {"book":"2 Nephi","chapter":28,"verse":7,"ref_book":"Luke","ref_chapter":12,"ref_verse":19,"is_parallel":true,"is_quotation":false}
+  ],
   "Bible-OT": [
     {"book":"2 Nephi","chapter":12,"verse":1,"ref_book":"Isaiah","ref_chapter":2,"ref_verse":1,"is_parallel":false,"is_quotation":true},
     {"book":"2 Nephi","chapter":12,"verse":2,"ref_book":"Isaiah","ref_chapter":2,"ref_verse":2,"is_parallel":false,"is_quotation":true},
@@ -538,6 +542,67 @@
     {"book":"Moroni","chapter":10,"verse":31,"ref_book":"Isaiah","ref_chapter":54,"ref_verse":2,"is_parallel":true,"is_quotation":false},
     {"book":"2 Nephi","chapter":26,"verse":25,"ref_book":"Isaiah","ref_chapter":55,"ref_verse":1,"is_parallel":true,"is_quotation":false},
     {"book":"2 Nephi","chapter":9,"verse":50,"ref_book":"Isaiah","ref_chapter":55,"ref_verse":1,"is_parallel":false,"is_quotation":true},
-    {"book":"2 Nephi","chapter":9,"verse":51,"ref_book":"Isaiah","ref_chapter":55,"ref_verse":2,"is_parallel":true,"is_quotation":false}
+    {"book":"2 Nephi","chapter":9,"verse":51,"ref_book":"Isaiah","ref_chapter":55,"ref_verse":2,"is_parallel":true,"is_quotation":false},
+
+    {"book":"Mosiah","chapter":12,"verse":34,"ref_book":"Exodus","ref_chapter":20,"ref_verse":2,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":12,"verse":35,"ref_book":"Exodus","ref_chapter":20,"ref_verse":3,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":12,"verse":36,"ref_book":"Exodus","ref_chapter":20,"ref_verse":4,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":12,"ref_book":"Exodus","ref_chapter":20,"ref_verse":4,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":13,"ref_book":"Exodus","ref_chapter":20,"ref_verse":5,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":14,"ref_book":"Exodus","ref_chapter":20,"ref_verse":6,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":15,"ref_book":"Exodus","ref_chapter":20,"ref_verse":7,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":16,"ref_book":"Exodus","ref_chapter":20,"ref_verse":8,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":17,"ref_book":"Exodus","ref_chapter":20,"ref_verse":9,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":18,"ref_book":"Exodus","ref_chapter":20,"ref_verse":10,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":19,"ref_book":"Exodus","ref_chapter":20,"ref_verse":11,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":20,"ref_book":"Exodus","ref_chapter":20,"ref_verse":12,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":21,"ref_book":"Exodus","ref_chapter":20,"ref_verse":13,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":22,"ref_book":"Exodus","ref_chapter":20,"ref_verse":14,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":22,"ref_book":"Exodus","ref_chapter":20,"ref_verse":15,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":23,"ref_book":"Exodus","ref_chapter":20,"ref_verse":16,"is_parallel":false,"is_quotation":true},
+    {"book":"Mosiah","chapter":13,"verse":24,"ref_book":"Exodus","ref_chapter":20,"ref_verse":17,"is_parallel":false,"is_quotation":true},
+
+    {"book":"3 Nephi","chapter":20,"verse":16,"ref_book":"Micah","ref_chapter":5,"ref_verse":8,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":20,"verse":17,"ref_book":"Micah","ref_chapter":5,"ref_verse":9,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":20,"verse":18,"ref_book":"Micah","ref_chapter":4,"ref_verse":12,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":20,"verse":19,"ref_book":"Micah","ref_chapter":4,"ref_verse":13,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":12,"ref_book":"Micah","ref_chapter":5,"ref_verse":8,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":13,"ref_book":"Micah","ref_chapter":5,"ref_verse":9,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":14,"ref_book":"Micah","ref_chapter":5,"ref_verse":10,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":15,"ref_book":"Micah","ref_chapter":5,"ref_verse":11,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":16,"ref_book":"Micah","ref_chapter":5,"ref_verse":12,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":17,"ref_book":"Micah","ref_chapter":5,"ref_verse":13,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":21,"verse":18,"ref_book":"Micah","ref_chapter":5,"ref_verse":14,"is_parallel":false,"is_quotation":true},
+
+    {"book":"3 Nephi","chapter":24,"verse":1,"ref_book":"Malachi","ref_chapter":3,"ref_verse":1,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":2,"ref_book":"Malachi","ref_chapter":3,"ref_verse":2,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":3,"ref_book":"Malachi","ref_chapter":3,"ref_verse":3,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":4,"ref_book":"Malachi","ref_chapter":3,"ref_verse":4,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":5,"ref_book":"Malachi","ref_chapter":3,"ref_verse":5,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":6,"ref_book":"Malachi","ref_chapter":3,"ref_verse":6,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":7,"ref_book":"Malachi","ref_chapter":3,"ref_verse":7,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":8,"ref_book":"Malachi","ref_chapter":3,"ref_verse":8,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":9,"ref_book":"Malachi","ref_chapter":3,"ref_verse":9,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":10,"ref_book":"Malachi","ref_chapter":3,"ref_verse":10,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":11,"ref_book":"Malachi","ref_chapter":3,"ref_verse":11,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":12,"ref_book":"Malachi","ref_chapter":3,"ref_verse":12,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":13,"ref_book":"Malachi","ref_chapter":3,"ref_verse":13,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":14,"ref_book":"Malachi","ref_chapter":3,"ref_verse":14,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":15,"ref_book":"Malachi","ref_chapter":3,"ref_verse":15,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":16,"ref_book":"Malachi","ref_chapter":3,"ref_verse":16,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":17,"ref_book":"Malachi","ref_chapter":3,"ref_verse":17,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":24,"verse":18,"ref_book":"Malachi","ref_chapter":3,"ref_verse":18,"is_parallel":false,"is_quotation":true},
+
+    {"book":"3 Nephi","chapter":25,"verse":1,"ref_book":"Malachi","ref_chapter":4,"ref_verse":1,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":25,"verse":2,"ref_book":"Malachi","ref_chapter":4,"ref_verse":2,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":25,"verse":3,"ref_book":"Malachi","ref_chapter":4,"ref_verse":3,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":25,"verse":4,"ref_book":"Malachi","ref_chapter":4,"ref_verse":4,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":25,"verse":5,"ref_book":"Malachi","ref_chapter":4,"ref_verse":5,"is_parallel":false,"is_quotation":true},
+    {"book":"3 Nephi","chapter":25,"verse":6,"ref_book":"Malachi","ref_chapter":4,"ref_verse":6,"is_parallel":false,"is_quotation":true},
+
+    {"book":"2 Nephi","chapter":28,"verse":31,"ref_book":"Jeremiah","ref_chapter":17,"ref_verse":5,"is_parallel":true,"is_quotation":false},
+    {"book":"2 Nephi","chapter":4,"verse":13,"ref_book":"Jeremiah","ref_chapter":17,"ref_verse":5,"is_parallel":true,"is_quotation":false},
+
+    {"book":"2 Nephi","chapter":4,"verse":5,"ref_book":"Proverbs","ref_chapter":22,"ref_verse":6,"is_parallel":true,"is_quotation":false}
   ]
 }
