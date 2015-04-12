@@ -64,7 +64,7 @@ module BomDB
           else
             # export editions that are mentioned by name-prefix
             ed_model = Models::Edition.new(@db)
-            opts[:edition_prefixes].each do |epat|
+            opts[:edition_prefixes].split(/\s*,\s*/).each do |epat|
               e = ed_model.find(epat)
               editions_by_id[ e[:edition_id] ] = e
             end

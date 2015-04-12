@@ -41,6 +41,75 @@ $ bomdb show 1829 --exclude Bible-OT
 # ... shows 6080 verses instead of the usual 6604
 ```
 
+
+### IMPORT and EXPORT portions of the database
+
+You can import and export any part of the database, such as the books, verses, editions, and contents (text) of the database.
+
+The github repository contains a set of "starter" json file that are used to seed the database with some reasonable structure and data; however, these json files are absent in the packaged Gem. If you've cloned the github repo, you can re-create the database from scratch:
+
+```bash
+$ bundle exec bin/bomdb create
+Database file 'bomdb/data/book_of_mormon.db' exists. Delete? (y/N)
+y
+Created the following tables:
+  books
+  verses
+  editions
+  contents
+  refs
+  notes
+Importing books...
+Success
+Importing verses...
+Success
+Importing editions...
+Success
+Importing contents...
+Success
+Importing refs...
+Success
+Done.
+```
+
+If you have an edition of the Book of Mormon in JSON format that is not present in the database, you can import it, like so:
+
+```bash
+$ bomdb import bom-1857.json --type=contents
+```
+
+(See the bomdb/data/contents.json file for an example of the expected JSON format)
+
+You can export specific editions in JSON format like so:
+
+```bash
+$ bomdb export contents --editions=1829,1830
+```
+
+or as text:
+
+```bash
+$ bomdb export contents --editions=1829,1830 --format=text
+```
+
+(Omit `--editions` altogether and you will get an export of ALL editions.)
+
+
+### List REFERENCES to Biblical (or other) texts
+
+```bash
+$ bomdb references
+Bible-NT (2 refs)
+Bible-OT (594 refs)
+```
+
+```bash
+$bomdb references Bible-NT
+1 Corinthians 15:32
+Luke 12:19
+```
+
+
 ### ALIGN a new Book of Mormon text file
 
 Suppose you have a new Book of Mormon text file that has been scanned from OCR or otherwise entered as a text file. It would take a lot of work to manually align all 6604 verses with the "standard" book, chapter, and verse numbers. Instead, BomDB helps automate this process:
