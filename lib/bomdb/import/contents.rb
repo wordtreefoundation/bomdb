@@ -5,12 +5,23 @@ module BomDB
   module Import
     class Contents < Import::Base
       tables :books, :verses, :editions, :contents
-      DEFAULT_VERSE_CONTENT_RE = /^\s*(.+)(\d+):(\d+)\s*(.*)$/
-      DEFAULT_VERSE_REF_RE = /^([^:]+)\s+(\d+):(\d+)$/
+      DEFAULT_VERSE_CONTENT_RE = /^\s*(.+)\s+(\d+):(\d+)\s+(.*)$/
+      DEFAULT_VERSE_REF_RE     = /^\s*(.+)\s+(\d+):(\d+)$/
 
       def import_text(data)
-        if opts[:edition_id].nil?
-          raise ArgumentError, "Edition is required for text import of contents"
+        if opts[:edition_prefix].nil?
+          return Import::Result.new(success: false,
+            error: "'--edition' is required for text import of contents"
+          )
+        end
+
+        edition_model = Models::Edition.new(@db)
+
+        edition = edition_model.find(opts[:edition_prefix])
+        if edition.nil?
+          return Import::Result.new(success: false,
+            error: "Edition matching prefix '#{opts[:edition_prefix]}' not found"
+          )
         end
 
         verse_re = opts[:verse_re] || DEFAULT_VERSE_CONTENT_RE
@@ -29,12 +40,13 @@ module BomDB
             )
 
             @db[:contents].insert(
-              edition_id:   opts[:edition_id],
+              edition_id:   edition[:edition_id],
               verse_id:     verse_id,
               content_body: content
             )
           end
         end
+        Import::Result.new(success: true)
       end
 
       def import_json(data)

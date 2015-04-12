@@ -9,8 +9,9 @@ module BomDB
 
 
       desc "import FILE", "import data from FILE into database, e.g. books.json"
-      option :type,   :type => :string,  :default => nil
-      option :format, :type => :string,  :default => 'json'
+      option :type,    :type => :string, :default => nil
+      option :format,  :type => :string, :default => 'json'
+      option :edition, :type => :string, :default => nil
       def import(file)
         type   = (options[:type]   || type_from_file(file)).downcase
         format = (options[:format] || format_from_file(file)).downcase
@@ -20,7 +21,7 @@ module BomDB
         when 'books'    then BomDB::Import::Books.new(BomDB.db)
         when 'verses'   then BomDB::Import::Verses.new(BomDB.db)
         when 'editions' then BomDB::Import::Editions.new(BomDB.db)
-        when 'contents' then BomDB::Import::Contents.new(BomDB.db)
+        when 'contents' then BomDB::Import::Contents.new(BomDB.db, edition_prefix: options[:edition])
         when 'refs'     then BomDB::Import::Refs.new(BomDB.db)
         else
           puts "Unknown import type #{type}"
@@ -156,15 +157,40 @@ module BomDB
 
 
       desc "editions", "list available editions of the Book of Mormon"
-      option :all, :type => :boolean, :default => false
+      option :all, :type => :boolean, :default => false,
+             :description => "Show all known editions, including those without content in BomDB"
+      option :"show-missing-verses", :type => :boolean, :default => false,
+             :description => "Lists missing verses in each edition (useful for fixing import errors)"
       def editions
-        eds = BomDB.db[:editions].
+        BomDB.db[:editions].
           left_outer_join(:contents, :edition_id => :edition_id).
-          select_group(:edition_name).
+          select_group(:editions__edition_id, :edition_name).
           select_append{ Sequel.as(count(:verse_id), :count) }.
           order(:edition_name).
-          map { |r| "#{r[:count]} verses\t#{r[:edition_name]}" }
-        puts eds.join("\n")
+        each do |r|
+          if r[:count] > 0 || options[:all]
+            puts "#{r[:count]} verses\t#{r[:edition_name]}"
+          end
+          if options[:"show-missing-verses"] && r[:count] > 0
+            BomDB.db[
+              "SELECT b.book_name, v.verse_chapter, v.verse_number " +
+              "FROM verses v " +
+              "JOIN books b ON v.book_id = b.book_id " +
+              "WHERE v.verse_heading IS NULL " +
+              "AND v.verse_id NOT IN " +
+              "(" +
+              " SELECT verse_id FROM contents c " +
+              " WHERE c.edition_id = ? " +
+              " AND c.verse_id = v.verse_id" +
+              ") " +
+              "ORDER BY b.book_sort, v.verse_chapter, v.verse_number",
+              r[:edition_id]
+            ].
+            each do |s|
+              puts "  #{s[:book_name]} #{s[:verse_chapter]}:#{s[:verse_number]} missing"
+            end
+          end
+        end
       end
 
 

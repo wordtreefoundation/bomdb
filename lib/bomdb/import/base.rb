@@ -26,15 +26,21 @@ module BomDB
           )
         end
 
-        case format
-        when 'json' then import_json(ensure_parsed_json(data))
-        when 'text' then import_text(data)
-        else
-          return Import::Result.new(
-            success: false,
-            error: "Unknown format: #{format}"
-          )
-        end
+        import_before() if respond_to?(:import_before)
+
+        result = case format
+          when 'json' then import_json(ensure_parsed_json(data))
+          when 'text' then import_text(data)
+          else
+            return Import::Result.new(
+              success: false,
+              error: "Unknown format: #{format}"
+            )
+          end
+
+        import_after() if respond_to?(:import_after)
+
+        result
       end
 
       def ensure_parsed_json(data)
