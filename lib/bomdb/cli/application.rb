@@ -123,7 +123,7 @@ module BomDB
              :description => "show chapter and verse in color"
       option :"for-alignment", :type => :boolean, :default => false,
              :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
-      def show(edition = '1829', range = nil)
+      def show(edition = '1992', range = nil)
         body_format = nil
         if options[:"for-alignment"]
           linesep = " "
