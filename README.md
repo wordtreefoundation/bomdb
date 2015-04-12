@@ -1,6 +1,6 @@
 # BomDB -- Book of Mormon DB
 
-This is a command-line tool (packaged as a Ruby gem) that provides multiple editions of the Book of Mormon in machine-readable form. At its heart is a sqlite3 database--data can be imported or exported using various formats and options.
+BomDB is a command-line tool (packaged as a Ruby gem) that provides multiple editions of the Book of Mormon in machine-readable form. At its heart is a sqlite3 database--data can be imported or exported using various formats and options.
 
 ## Usage
 
@@ -27,7 +27,7 @@ Moroni 10:34 And now I bid unto all farewell. I soon go to rest in the paradise 
 Suppose we want to remove the book, chapter, and verse headings from the output:
 
 ```bash
-$ bomdb show 1829 --no-verse
+$ bomdb show 1829 --no-verses
 
 I Nephi having been born of goodly parents, therefore I was taught somewhat in all the learning of my father...
 # ... etc ...

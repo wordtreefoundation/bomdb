@@ -23,7 +23,11 @@ module BomDB
         select(:book_name, :verse_chapter, :verse_number, :content_body)
       q.where!(:editions__edition_id => edition[:edition_id]) if @edition
       q.where!(:verse_heading => nil) unless @headings
-      q.exclude!(:verses__verse_id => db[:refs].select(:verse_id).where(:ref_name => @exclude)) if @exclude
+      if @exclude
+        excluded_verse_ids = db[:refs].select(:verse_id).
+          where(:ref_name => @exclude.split(/\s*,\s*/))
+        q.exclude!(:verses__verse_id => excluded_verse_ids)
+      end
       q
     end
 
@@ -37,15 +41,22 @@ module BomDB
       body_format ||= lambda{ |body| body + linesep }
       query.each do |row|
         shown = true
-        io.print verse_format[
+        verse = verse_format[
           row[:book_name],
           row[:verse_chapter],
           row[:verse_number]
         ]
-        io.print sep
-        io.print body_format[ row[:content_body] ]
+        unless verse.empty?
+          io.print verse
+          io.print sep
+        end
+        begin
+          io.print body_format[ row[:content_body] ]
+        rescue TypeError
+          next
+        end
       end
-      io.puts "Nothing found" unless shown
+      io.puts "Nothing shown" unless shown
     end
   end
 end

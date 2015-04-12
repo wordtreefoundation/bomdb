@@ -1,6 +1,7 @@
 require 'thor'
 require 'bomdb'
 require 'colorize'
+require 'text_clean'
 
 module BomDB
   module Cli
@@ -111,7 +112,7 @@ module BomDB
 
 
       desc "show EDITION RANGE", "show an edition of the Book of Mormon, or a RANGE of verses"
-      option :verse,   :type => :boolean, :default => true,
+      option :verses,  :type => :boolean, :default => true,
              :description => "show book, chapter, verse annotations"
       option :exclude, :type => :string, :aliases => [:x],
              :description => "exclude verses that are references, e.g. Bible-OT references"
@@ -123,18 +124,30 @@ module BomDB
              :description => "show chapter and verse in color"
       option :"for-alignment", :type => :boolean, :default => false,
              :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
+      option :clean,   :type => :boolean, :default => false,
+             :description => "remove punctuation and normalize text by sentence"
       def show(edition = '1992', range = nil)
         body_format = nil
+        wordsep = options[:sep]
+        linesep = options[:linesep]
+
         if options[:"for-alignment"]
           linesep = " "
           verse_format = verse_format_for_alignment(options[:color])
+        elsif options[:clean]
+          linesep = " "
+          verse_format = lambda{ |b,c,v| '' }
+          body_format = lambda do |body|
+            TextClean.clean(body)
+          end
         else
-          linesep = options[:linesep]
-          if options[:verse]
+          if options[:verses]
             if options[:color]
-              verse_format = lambda{ |b,c,v| b.colorize(:yellow) + ' ' + 
-                                             c.to_s.colorize(:green) + ':' + 
-                                             v.to_s.colorize(:light_green) }
+              verse_format = lambda do |b,c,v|
+                b.colorize(:yellow) + wordsep + 
+                c.to_s.colorize(:green) + ':' + 
+                v.to_s.colorize(:light_green)
+              end
             else
               verse_format = nil
             end
@@ -149,7 +162,7 @@ module BomDB
         ).print(
           verse_format: verse_format,
           body_format: body_format,
-          sep:     options[:sep],
+          sep:     wordsep,
           linesep: linesep
         )
       end
