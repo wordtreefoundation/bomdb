@@ -29,7 +29,12 @@ module BomDB
           exit -1
         end
 
-        result = importer.import(read(file), format: format)
+        begin
+          result = importer.import(read(file), format: format)
+        rescue JSON::ParserError
+          puts "Couldn't parse as JSON. Use '--format=text'?"
+          exit -1
+        end
         show_result_and_maybe_exit(result)
       end
 
@@ -246,24 +251,20 @@ module BomDB
         end
 
         dwdiff = Diff::Dwdiff.new(options[:dwdiff])
-        align_str = File.read(file).gsub(/\s\s+/, ' ')
+        align_str = File.read(file).gsub(/\s\s+/, ' ').gsub(':', '~')
         diff = dwdiff.diff(io.string, align_str)
-        
+
         if options[:'diff-only']
           puts diff
           exit
         end
 
-        puts Diff::Aligner.parse(diff)
+        puts Diff::Aligner.parse(diff).gsub('~', ':')
       end
 
 
 
       private
-
-      def datafile(file)
-        
-      end
 
       def read(file)
         File.read(relative_or_data_file(file))

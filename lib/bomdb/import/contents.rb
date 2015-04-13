@@ -7,6 +7,7 @@ module BomDB
       tables :books, :verses, :editions, :contents
       DEFAULT_VERSE_CONTENT_RE = /^\s*(.+)\s+(\d+):(\d+)\s+(.*)$/
       DEFAULT_VERSE_REF_RE     = /^\s*(.+)\s+(\d+):(\d+)$/
+      MAX_DUPS = 5
 
       def import_text(data)
         if opts[:edition_prefix].nil?
@@ -23,9 +24,11 @@ module BomDB
             error: "Edition matching prefix '#{opts[:edition_prefix]}' not found"
           )
         end
+        edition_id = edition[:edition_id]
 
         verse_re = opts[:verse_re] || DEFAULT_VERSE_CONTENT_RE
 
+        times_tried = 0
         data.each_line do |line|
           if line =~ verse_re
             book_name, chapter, verse, content = $1, $2, $3, $4
@@ -39,11 +42,24 @@ module BomDB
               book_id: book[:book_id]
             )
 
-            @db[:contents].insert(
-              edition_id:   edition[:edition_id],
-              verse_id:     verse_id,
-              content_body: content
-            )
+            begin
+              @db[:contents].insert(
+                edition_id:   edition_id,
+                verse_id:     verse_id,
+                content_body: content
+              )
+            rescue Sequel::UniqueConstraintViolation => e
+              msg = "edition_id: #{edition_id}, verse: '#{book_name} #{chapter}:#{verse}', content: #{content.inspect}"
+              $stderr.puts "Warning: duplicate #{msg}"
+              times_tried += 1
+              if times_tried > MAX_DUPS
+                return Import::Result.new(success: false,
+                  error: "Too many duplicate rows. Stopped at #{msg}"
+                )
+              else
+                next
+              end
+            end
           end
         end
         Import::Result.new(success: true)
