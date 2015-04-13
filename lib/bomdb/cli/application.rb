@@ -246,8 +246,9 @@ module BomDB
         end
 
         dwdiff = Diff::Dwdiff.new(options[:dwdiff])
-        diff = dwdiff.diff(io.string, File.read(file))
-
+        align_str = File.read(file).gsub(/\s\s+/, ' ')
+        diff = dwdiff.diff(io.string, align_str)
+        
         if options[:'diff-only']
           puts diff
           exit

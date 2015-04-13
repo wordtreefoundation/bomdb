@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'constellation', '~> 0.1'
   spec.add_dependency 'colorize',      '~> 0.7'
   spec.add_dependency 'text_clean'
+  spec.add_dependency 'levenshtein-ffi'
 
   # spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake',    '~> 10.0'

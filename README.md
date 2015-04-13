@@ -104,7 +104,7 @@ Bible-OT (594 refs)
 ```
 
 ```bash
-$bomdb references Bible-NT
+$ bomdb references Bible-NT
 1 Corinthians 15:32
 Luke 12:19
 ```
@@ -135,7 +135,13 @@ Note that `align` requires the [dwdiff](http://linux.die.net/man/1/dwdiff) comma
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Ruby 2.1 is required. You should also have a normal build environment set up, e.g. command line tools on the mac, or GCC on Linux.
+
+To install BomDB for use on the command line, use `gem install`:
+
+    $ gem install bomdb
+
+To include bomdb in another Ruby app, add this line to your application's `Gemfile`:
 
 ```ruby
 source 'https://rubygems.org'
@@ -146,10 +152,6 @@ gem 'bomdb'
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install bomdb
 
 ## Configuration
 
