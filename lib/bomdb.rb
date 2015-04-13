@@ -15,8 +15,6 @@ module BomDB
   end
 end
 
-require 'byebug'
-
 require 'bomdb/version'
 require 'bomdb/config'
 require 'bomdb/schema'
