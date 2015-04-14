@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bomdb (0.2.3)
+    bomdb (0.3.0)
       colorize (~> 0.7)
       constellation (~> 0.1)
       levenshtein-ffi (~> 1.1)
