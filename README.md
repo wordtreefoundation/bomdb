@@ -141,7 +141,7 @@ Note that `align` requires the [dwdiff](http://linux.die.net/man/1/dwdiff) comma
 
 ### Custom Queries
 
-Here's a simple way to analyze the Book of Mormon to see the famous wherefore/therefore mystery:
+Here's a simple way to analyze the Book of Mormon to see the wherefore/therefore divergence leading to the [Mosiah Priority](http://signaturebookslibrary.org/new-approaches-to-the-book-of-mormon-10/) (Mosiah was written before 1 Nephi) hypothesis:
 
 ```ruby
 $ bundle exec irb -rbomdb
