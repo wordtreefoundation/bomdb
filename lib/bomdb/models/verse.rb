@@ -16,19 +16,28 @@ module BomDB
       end
 
       # Create a verse and return its verse_id
-      def create(chapter:, verse:, book_name: nil, book_id: nil, heading: false)
+      def create(chapter:, verse:, book_name: nil, book_id: nil, heading: false, range_id: nil)
         @db[:verses].insert(
           book_id:       book_by_name_or_id(book_name, book_id),
           verse_chapter: chapter,
           verse_number:  verse,
-          verse_heading: heading ? 0 : nil
+          verse_heading: heading ? 0 : nil,
+          verse_range_id: range_id
         )
       end
 
       # Returns a verse_id after finding or creating the verse
-      def find_or_create(**args)
-        verse = find(**args)
-        (verse && verse[:verse_id]) || create(**args)
+      def find_or_create(chapter:, verse:, book_name: nil, book_id: nil, heading: false, range_id: nil)
+        verse = find(
+          chapter: chapter, verse: verse,
+          book_name: book_name, book_id: book_id,
+          heading: heading
+        )
+        (verse && verse[:verse_id]) || create(
+          chapter: chapter, verse: verse,
+          book_name: book_name, book_id: book_id,
+          heading: heading, range_id: range_id
+        )
       end
 
       protected

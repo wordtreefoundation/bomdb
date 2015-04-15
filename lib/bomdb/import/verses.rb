@@ -16,23 +16,31 @@ module BomDB
       #   ...
       # ]
       def import_json(data, **args)
+        book, chapter = nil, nil
+        verse_model = Models::Verse.new(@db)
         data.each do |r|
-          # Create a heading per chapter
-          Models::Verse.new(@db).find_or_create(
-            chapter:   r['chapter'],
-            verse:     nil,
-            book_name: r['book'],
-            heading:   true
-          )
-
-          # Create as many verses as is called for per chapter
-          (1..r['verses']).each do |verse_number|
+          if r['chapter'] != chapter || r['book'] != book
+            # Create a heading per chapter
             Models::Verse.new(@db).find_or_create(
               chapter:   r['chapter'],
-              verse:     verse_number,
-              book_name: r['book']
+              verse:     nil,
+              book_name: r['book'],
+              heading:   true
             )
+            chapter = r['chapter']
           end
+
+          if r['book'] != book
+            puts "Importing chapters & verses for '#{r['book']}'"
+            book = r['book']
+          end
+
+          verse_model.find_or_create(
+            chapter:   r['chapter'],
+            verse:     r['verse'],
+            book_name: r['book'],
+            range_id:  r['range_id']
+          )
         end
         Import::Result.new(success: true)
       rescue Sequel::UniqueConstraintViolation => e

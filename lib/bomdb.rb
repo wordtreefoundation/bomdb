@@ -1,4 +1,5 @@
 require 'sequel'
+require 'mericope'
 
 dbfile = ARGV.first || "book_of_mormon.db"
 

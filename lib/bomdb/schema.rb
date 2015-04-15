@@ -37,6 +37,8 @@ module BomDB
         integer :verse_number,  :null => true
         integer :verse_heading, :null => true
 
+        integer :verse_range_id, :unique => true, :null => true
+
         index [:book_id, :verse_chapter, :verse_number, :verse_heading], :unique => true
       end if include?(tables, :verses)
 
