@@ -2,7 +2,7 @@ require 'bomdb/models/edition'
 
 module BomDB
   class Query
-    def initialize(edition:, exclude: nil, headings: false)
+    def initialize(edition: 1829, exclude: nil, headings: false)
       @edition = edition
       @exclude = exclude
       @headings = headings
@@ -33,6 +33,38 @@ module BomDB
 
     def each(&block)
       query.each(&block)
+    end
+
+    def chapters
+      groups = query.all.group_by do |x|
+        [x[:book_name], x[:verse_chapter]]
+      end
+      Enumerator.new(groups.size) do |y|
+        groups.each do |heading, rows|
+          content = rows.map{ |r| r[:content_body] }.join(" ")
+          y.yield(heading, content)
+        end
+      end
+    end
+
+    def books
+      groups = query.all.group_by{ |x| x[:book_name] }
+      Enumerator.new(groups.size) do |y|
+        groups.each do |heading, rows|
+          content = rows.map{ |r| r[:content_body] }.join(" ")
+          y.yield(heading, content)
+        end
+      end
+    end
+
+    def wordgroups(wordcount)
+      content = query.all.map{ |r| r[:content_body] }.join(" ")
+      groups = content.scan(/[^ ]+/).each_slice(wordcount).map{ |w| w.join(" ") }
+      Enumerator.new(groups.size) do |y|
+        groups.each do |g|
+          y.yield(g)
+        end
+      end
     end
 
     def print(verse_format: nil, body_format: nil, sep: ' ', linesep: "\n", io: $stdout)

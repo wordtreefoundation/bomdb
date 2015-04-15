@@ -133,6 +133,30 @@ $ bomdb align my_typed_bom.txt
 
 Note that `align` requires the [dwdiff](http://linux.die.net/man/1/dwdiff) command on your system.
 
+### Custom Queries
+
+Here's a simple way to analyze the Book of Mormon to see the famous wherefore/therefore mystery:
+
+```ruby
+$ bundle exec irb -rbomdb
+irb(main):001:0> q = BomDB::Query.new(exclude: 'Bible-OT')
+=> #<BomDB::Query:0x007f90ad1cb408 @edition=1829, @exclude="Bible-OT", @headings=false>
+irb(main):002:0> q.books.map{ |book,content| [book, content.scan(/wherefore/i).size, content.scan(/therefore/i).size] }
+=> [
+     ["1 Nephi", 99, 13], ["2 Nephi", 126, 6], ["Jacob", 53, 1],
+     ["Enos", 6, 0], ["Jarom", 3, 0], ["Omni", 6, 0], ["Words of Mormon", 5, 0],
+     ["Mosiah", 0, 122], ["Alma", 3, 288], ["Helaman", 0, 63],
+     ["3 Nephi", 3, 96], ["4 Nephi", 0, 5], ["Mormon", 0, 22],
+     ["Ether", 63, 26], ["Moroni", 38, 0]
+   ]
+```
+
+Other possible enumerables on a Query include:
+
+- books: enumerate on each book of the Book of Mormon
+- chapters: enumerate on each book and chapter of the Book of Mormon
+- wordgroups(N): enumerate on consecutive N words, e.g. each 1000 words
+
 ## Installation
 
 Ruby 2.1 is required. You should also have a normal build environment set up, e.g. command line tools on the mac, or GCC on Linux.
