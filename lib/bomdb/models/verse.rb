@@ -28,12 +28,12 @@ module BomDB
 
       # Returns a verse_id after finding or creating the verse
       def find_or_create(chapter:, verse:, book_name: nil, book_id: nil, heading: false, range_id: nil)
-        verse = find(
+        v = find(
           chapter: chapter, verse: verse,
           book_name: book_name, book_id: book_id,
           heading: heading
         )
-        (verse && verse[:verse_id]) || create(
+        (v && v[:verse_id]) || create(
           chapter: chapter, verse: verse,
           book_name: book_name, book_id: book_id,
           heading: heading, range_id: range_id

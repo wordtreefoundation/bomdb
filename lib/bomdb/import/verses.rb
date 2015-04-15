@@ -9,9 +9,10 @@ module BomDB
       # Expected data format is:
       # [
       #   {
-      #     "book": String,
-      #     "chapter": Int,
-      #     "verses": Int
+      #     "range_id": Int,  # the mericope range ID
+      #     "book": String,   # the name of the book, e.g. 1 Nephi
+      #     "chapter": Int,   # the chapter number
+      #     "verse": Int      # the verse number
       #   },
       #   ...
       # ]
@@ -34,7 +35,6 @@ module BomDB
             puts "Importing chapters & verses for '#{r['book']}'"
             book = r['book']
           end
-
           verse_model.find_or_create(
             chapter:   r['chapter'],
             verse:     r['verse'],
