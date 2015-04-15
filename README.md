@@ -135,7 +135,6 @@ $ bomdb align my_typed_bom.txt
 1 Nephi 1:1 I, Nephi, having been born of goodly parents, therefore I was taught somewhat in all the learning of my father; and having seen many afflictions in the course of my days--nevertheless, having been highly favored of the Lord in all my days; yea, having had a great knowledge of the goodness and the mysteries of God, therefore I make a record of my proceedings in my days;
 1 Nephi 1:2 yea, I make a record in the language of my father, which consists of the learning of the Jews and the language of the Egyptians. 
 1 Nephi 1:3 And I know that the record which I make  is true; and I make it with mine own hand; and I make it according to my knowledge. 
-# ... shows 6601 more verses
 ```
 
 Note that `align` requires the [dwdiff](http://linux.die.net/man/1/dwdiff) command on your system.
