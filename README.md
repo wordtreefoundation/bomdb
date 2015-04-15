@@ -151,6 +151,36 @@ irb(main):002:0> q.books.map{ |book,content| [book, content.scan(/wherefore/i).s
    ]
 ```
 
+Or perhaps a little more visually:
+```ruby
+require 'bomdb'
+
+q = BomDB::Query.new(exclude: "Bible-OT")
+
+q.books.each do |book,content|
+  words = content.scan(/ +/).size
+  puts book.ljust(18) +
+    'W' * (content.scan(/wherefore/i).size.to_f / words * 2000) +
+    'T' * (content.scan(/therefore/i).size.to_f / words * 2000)
+end
+
+# 1 Nephi           WWWWWWWWT
+# 2 Nephi           WWWWWWWWWWWWWW
+# Jacob             WWWWWWWWWWW
+# Enos              WWWWWWWWWW
+# Jarom             WWWWWWWW
+# Omni              WWWWWWWW
+# Words of Mormon   WWWWWWWWWWW
+# Mosiah            TTTTTTTT
+# Alma              TTTTTT
+# Helaman           TTTTTT
+# 3 Nephi           TTTTTTT
+# 4 Nephi           TTTTT
+# Mormon            TTTT
+# Ether             WWWWWWWTTT
+# Moroni            WWWWWWWWWWWW
+```
+
 Other possible enumerables on a Query include:
 
 - books: enumerate on each book of the Book of Mormon
