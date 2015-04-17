@@ -187,13 +187,13 @@ end
 # Moroni            WWWWWWWWWWWW
 ```
 
-### Custom Queries and Charts
-
 Other possible enumerables on a Query include:
 
 - books: enumerate on each book of the Book of Mormon
 - chapters: enumerate on each book and chapter of the Book of Mormon
 - wordgroups(N): enumerate on consecutive N words, e.g. each 1000 words
+
+### Custom Queries and Charts
 
 Let's zoom in on the interesting book, Ether, where the crossover occurs:
 
