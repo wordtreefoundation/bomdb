@@ -147,7 +147,7 @@ Note that `align` requires the [dwdiff](http://linux.die.net/man/1/dwdiff) comma
 
 ### Custom Queries
 
-Here's a simple way to analyze the Book of Mormon to see the wherefore/therefore divergence leading to the [Mosiah Priority](http://signaturebookslibrary.org/new-approaches-to-the-book-of-mormon-10/) (Mosiah was written before 1 Nephi) hypothesis:
+Here's a simple way to analyze the Book of Mormon to see the wherefore/therefore divergence leading to the [Mosiah Priority](http://signaturebookslibrary.org/new-approaches-to-the-book-of-mormon-10/) hypothesis (Mosiah was written before 1 Nephi):
 
 ```ruby
 $ bundle exec irb -rbomdb
@@ -193,7 +193,7 @@ end
 # Moroni            WWWWWWWWWWWW
 ```
 
-Other possible enumerables on a Query include:
+Other possible enumerables on a Query object include:
 
 - books: enumerate on each book of the Book of Mormon
 - chapters: enumerate on each book and chapter of the Book of Mormon
@@ -201,7 +201,7 @@ Other possible enumerables on a Query include:
 
 ### Custom Queries and Charts
 
-Let's zoom in on the interesting book, Ether, where the crossover occurs:
+Let's zoom in on the interesting book, Ether, where the Wherefore/Therefore crossover occurs:
 
 ```ruby
 require 'bomdb'
