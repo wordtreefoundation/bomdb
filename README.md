@@ -52,7 +52,7 @@ $ bomdb show '1 Nephi 1-22' --exclude Bible-OT
 
 You can import and export any part of the database, such as the books, verses, editions, and contents (text) of the database.
 
-The github repository contains a set of "starter" json file that are used to seed the database with some reasonable structure and data; however, these json files are absent in the packaged Gem. If you've cloned the github repo, you can re-create the database from scratch:
+The github repository contains a set of "starter" json files that are used to seed the database with some reasonable structure and data; however, these json files are absent in the packaged Gem. If you've cloned the github repo, you can use these files to re-create the database from scratch:
 
 ```bash
 $ bundle exec bin/bomdb create
