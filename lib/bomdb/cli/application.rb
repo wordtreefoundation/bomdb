@@ -10,9 +10,12 @@ module BomDB
 
 
       desc "import FILE", "import data from FILE into database, e.g. books.json"
-      option :type,    :type => :string, :default => nil
-      option :format,  :type => :string, :default => 'json'
-      option :edition, :type => :string, :default => nil
+      option :type,    :type => :string, :default => nil,
+             :description => "type of data to import, i.e. one of: books, verses, editions, contents, refs"
+      option :format,  :type => :string, :default => 'json',
+             :description => "format of the data being imported. One of: json, text"
+      option :edition, :type => :string, :default => nil,
+             :description => "edition of the Book of Mormon in which to import (assumes type=contents) (required when format=text)"
       def import(file)
         type   = (options[:type]   || type_from_file(file)).downcase
         format = (options[:format] || format_from_file(file)).downcase
@@ -40,9 +43,11 @@ module BomDB
 
 
 
-      desc "export TYPE", "export data from the database, e.g. books"
-      option :format, :type => :string,  :default => 'json'
-      option :editions, :type => :string, :default => :all
+      desc "export TYPE", "export data from the database, i.e. one of: books, verses, editions, contents"
+      option :format, :type => :string,  :default => 'json',
+             :description => "format of the data being imported. One of: json, text"
+      option :editions, :type => :string, :default => :all,
+             :description => "edition(s) of the Book of Mormon to export. Defaults to 'all' editions."
       def export(type)
         format = options[:format].downcase
 
@@ -116,7 +121,7 @@ module BomDB
 
 
 
-      desc "show EDITION RANGE", "show an edition of the Book of Mormon, or a RANGE of verses"
+      desc "show RANGE", "show a RANGE of verses in the Book of Mormon (defaults to 1829 edition)"
       option :verses,  :type => :boolean, :default => true,
              :description => "show book, chapter, verse annotations"
       option :exclude, :type => :string, :aliases => [:x],
@@ -131,7 +136,9 @@ module BomDB
              :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
       option :clean,   :type => :boolean, :default => false,
              :description => "remove punctuation and normalize text by sentence"
-      def show(edition = '1992', range = nil)
+      option :edition, :type => :string, :default => '1829',
+             :description => "show verses from a specific edition (see 'editions' command for list)"
+      def show(range = nil)
         body_format = nil
         wordsep = options[:sep]
         linesep = options[:linesep]
@@ -161,9 +168,9 @@ module BomDB
           end
         end
         BomDB::Query.new(
-          edition: edition,
-          exclude: options[:exclude]
-          # range: range
+          edition: options[:edition],
+          exclude: options[:exclude],
+          range: range
         ).print(
           verse_format: verse_format,
           body_format: body_format,
