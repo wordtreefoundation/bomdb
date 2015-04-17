@@ -212,14 +212,15 @@ axis_labels = data.map(&:first)
 wherefores = data.map{ |d| d[1] }
 therefores = data.map{ |d| d[2] }
 y_max = [wherefores.max, therefores.max].max
+title = 'Wherefores/Therefores Per Word in Ether'
 
-GoogleChart::LineChart.new('600x400', 'Wherefores/Therefores Per Word in Ether', false) do |chart|
+GoogleChart::LineChart.new('600x400', title, false) do |chart|
   chart.data "Wherefores", wherefores, '2200ff'
   chart.show_legend = true
   chart.data "Therefores", therefores, 'ff2200'
-  chart.axis :y, :range => [0.0, y_max] #, :color => 'ff00ff', :font_size => 16, :alignment => :center
-  chart.axis :x, :range => axis_labels #, :color => '00ffff', :font_size => 16, :alignment => :center
-  chart.grid :x_step => 20.0, :y_step => 30.0, :length_segment => 1, :length_blank => 0
+  chart.axis :y, range: [0.0, y_max], font_size: 16
+  chart.axis :x, range: axis_labels, font_size: 16
+  chart.grid x_step: 20.0, y_step: 30.0, length_segment: 1, length_blank: 0
   puts chart.to_url
 end
 ```
