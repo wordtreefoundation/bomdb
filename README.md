@@ -237,7 +237,7 @@ GoogleChart::LineChart.new('600x400', title, false) do |chart|
 end
 ```
 
-![Wherefore/Therefores in Ether](http://chart.apis.google.com/chart?chs=600x400&cht=lc&chco=2200ff,ff2200&chxt=y,x&chxr=0,0.0,0.009721322099805573|1,1,15&chg=20.0,30.0,1.0,0.0&chd=s:AJOOcFpeRaQ8eWX,UJiVcRGFNAAEAAE&chdl=Wherefores|Therefores&chtt=Wherefores/Therefores+Per+Word+in+Ether)
+![Wherefore/Therefores in Ether](http://chart.apis.google.com/chart?chs=600x400&cht=lc&chco=2200ff,ff2200&chxt=y,x&chxr=0,0.0,0.009721322099805573|1,1,15&chg=20.0,30.0,1.0,0.0&chd=s:AJOOcFpeRaQ8eWX,UJiVcRGFNAAEAAE&chdl=Wherefores|Therefores&chtt=Wherefores/Therefores+Per+Word+in+Ether+by+Chapter)
 
 ## Installation
 
