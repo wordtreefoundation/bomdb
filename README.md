@@ -45,7 +45,17 @@ Or, show only 1 Nephi, without Old Testament references:
 
 ```bash
 $ bomdb show '1 Nephi 1-22' --exclude Bible-OT
-# ... shows 563 verses in 1st Nephi (1st Nephi has 618 verses, but some are from the Old Testament)
+# ... shows 563 verses in 1st Nephi (1st Nephi has 618 verses,
+# but some are from the Old Testament)
+```
+
+BomDB uses the [Mericope](https://github.com/wordtreefoundation/mericope) gem to parse scriptural ranges ("pericopes"), so it is quite flexible:
+
+```bash
+$ bomdb show 'Mosiah 5:1-2,6'
+Mosiah 5:1 And now it came to pass that when king Benjamin had thus spoken...
+Mosiah 5:2 And they all cried with one voice, saying: Yea, we believe...
+Mosiah 5:6 And now these are the words which king Benjamin desired of them...
 ```
 
 ### IMPORT and EXPORT portions of the database
