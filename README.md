@@ -153,7 +153,11 @@ Here's a simple way to analyze the Book of Mormon to see the wherefore/therefore
 $ bundle exec irb -rbomdb
 irb(main):001:0> q = BomDB::Query.new(exclude: 'Bible-OT')
 => #<BomDB::Query:0x007f90ad1cb408 @edition=1829, @exclude="Bible-OT", @headings=false>
-irb(main):002:0> q.books.map{ |book,content| [book, content.scan(/wherefore/i).size, content.scan(/therefore/i).size] }
+irb(main):002:0> q.books.map do |book,content|
+  [book,
+   content.scan(/wherefore/i).size,
+   content.scan(/therefore/i).size]
+end
 => [
      ["1 Nephi", 99, 13], ["2 Nephi", 126, 6], ["Jacob", 53, 1],
      ["Enos", 6, 0], ["Jarom", 3, 0], ["Omni", 6, 0], ["Words of Mormon", 5, 0],
@@ -242,6 +246,8 @@ Ruby 2.1 is required. You should also have a normal build environment set up, e.
 To install BomDB for use on the command line, use `gem install`:
 
     $ gem install bomdb
+
+To install `dwdiff` on your Mac OS X system: `brew install dwdiff`, or on Ubuntu: `sudo apt-get install dwdiff`.
 
 To include bomdb in another Ruby app, add this line to your application's `Gemfile`:
 
