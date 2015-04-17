@@ -193,6 +193,39 @@ Other possible enumerables on a Query include:
 - chapters: enumerate on each book and chapter of the Book of Mormon
 - wordgroups(N): enumerate on consecutive N words, e.g. each 1000 words
 
+Let's zoom in on the interesting book, Ether, where the crossover occurs:
+
+```ruby
+require 'bomdb'
+require 'google_chart' # gem is called 'gchartrb'
+
+q = BomDB::Query.new(range: 'Ether 1-15')
+
+data = q.chapters.map do |(book, chapter), content|
+  words = content.scan(/ +/).size
+  wh = content.scan(/wherefore/i).size.to_f / words
+  th = content.scan(/therefore/i).size.to_f / words
+  [chapter, wh, th]
+end
+
+axis_labels = data.map(&:first)
+wherefores = data.map{ |d| d[1] }
+therefores = data.map{ |d| d[2] }
+y_max = [wherefores.max, therefores.max].max
+
+GoogleChart::LineChart.new('600x400', 'Wherefores/Therefores Per Word in Ether', false) do |chart|
+  chart.data "Wherefores", wherefores, '2200ff'
+  chart.show_legend = true
+  chart.data "Therefores", therefores, 'ff2200'
+  chart.axis :y, :range => [0.0, y_max] #, :color => 'ff00ff', :font_size => 16, :alignment => :center
+  chart.axis :x, :range => axis_labels #, :color => '00ffff', :font_size => 16, :alignment => :center
+  chart.grid :x_step => 20.0, :y_step => 30.0, :length_segment => 1, :length_blank => 0
+  puts chart.to_url
+end
+```
+
+![Wherefore/Therefores in Ether](http://chart.apis.google.com/chart?chs=600x400&cht=lc&chco=2200ff,ff2200&chxt=y,x&chxr=0,0.0,0.009721322099805573|1,1,15&chg=20.0,30.0,1.0,0.0&chd=s:AJOOcFpeRaQ8eWX,UJiVcRGFNAAEAAE&chdl=Wherefores|Therefores&chtt=Wherefores/Therefores+Per+Word+in+Ether)
+
 ## Installation
 
 Ruby 2.1 is required. You should also have a normal build environment set up, e.g. command line tools on the mac, or GCC on Linux.

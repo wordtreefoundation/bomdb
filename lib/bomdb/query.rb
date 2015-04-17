@@ -2,8 +2,9 @@ require 'bomdb/models/edition'
 
 module BomDB
   class Query
-    def initialize(edition: 1829, exclude: nil, headings: false)
+    def initialize(edition: 1829, range: nil, exclude: nil, headings: false)
       @edition = edition
+      @range = range
       @exclude = exclude
       @headings = headings
     end
@@ -23,6 +24,11 @@ module BomDB
         select(:book_name, :verse_chapter, :verse_number, :content_body)
       q.where!(:editions__edition_id => edition[:edition_id]) if @edition
       q.where!(:verse_heading => nil) unless @headings
+      if @range
+        pericope = Mericope.new(@range)
+        pairs = pericope.ranges.map{ |r| [:verse_range_id, r] }
+        q.where!(Sequel::SQL::BooleanExpression.from_value_pairs(pairs, :OR))
+      end
       if @exclude
         excluded_verse_ids = db[:refs].select(:verse_id).
           where(:ref_name => @exclude.split(/\s*,\s*/))
