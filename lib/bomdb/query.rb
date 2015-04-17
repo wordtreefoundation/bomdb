@@ -2,9 +2,10 @@ require 'bomdb/models/edition'
 
 module BomDB
   class Query
-    def initialize(edition: 1829, range: nil, exclude: nil, headings: false)
+    def initialize(edition: 1829, range: nil, search: nil, exclude: nil, headings: false)
       @edition = edition
       @range = range
+      @search = search
       @exclude = exclude
       @headings = headings
     end
@@ -28,6 +29,9 @@ module BomDB
         pericope = Mericope.new(@range)
         pairs = pericope.ranges.map{ |r| [:verse_range_id, r] }
         q.where!(Sequel::SQL::BooleanExpression.from_value_pairs(pairs, :OR))
+      end
+      if @search
+        q.where!(Sequel.like(Sequel.function(:LOWER, :content_body), "%#{@search.downcase}%"))
       end
       if @exclude
         excluded_verse_ids = db[:refs].select(:verse_id).

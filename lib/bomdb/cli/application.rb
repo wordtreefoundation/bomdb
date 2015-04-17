@@ -138,6 +138,8 @@ module BomDB
              :description => "remove punctuation and normalize text by sentence"
       option :edition, :type => :string, :default => '1829',
              :description => "show verses from a specific edition (see 'editions' command for list)"
+      option :search,  :type => :string, :default => nil,
+             :description => "show only verses that contain the search term"
       def show(range = nil)
         body_format = nil
         wordsep = options[:sep]
@@ -169,8 +171,9 @@ module BomDB
         end
         BomDB::Query.new(
           edition: options[:edition],
-          exclude: options[:exclude],
-          range: range
+          range: range,
+          search: options[:search],
+          exclude: options[:exclude]
         ).print(
           verse_format: verse_format,
           body_format: body_format,
