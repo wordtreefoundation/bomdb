@@ -66,7 +66,7 @@ You can also search for specific terms in the Book of Mormon. Let's search for '
 $ bomdb show --search 'whoso' '3 Nephi 1-30'
 ```
 
-This results in color-highlighted results:
+This shows a color-highlighted result set (note: github markdown does not show color):
 
 <p><span style="color:#9fa01c">3 Nephi</span><span style="color:#050505">
 </span><span style="color:#2fb41d">9</span><span style="color:#050505">:</span><span style="color:#2fe71a">14</span><span style="color:#050505">
