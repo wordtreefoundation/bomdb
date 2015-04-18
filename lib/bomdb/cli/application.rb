@@ -126,6 +126,8 @@ module BomDB
              :description => "show book, chapter, verse annotations"
       option :exclude, :type => :string, :aliases => [:x],
              :description => "exclude verses that are references, e.g. Bible-OT references"
+      option :"exclude-only-quotations", :type => :boolean, :aliases => [:q],
+             :description => "don't exclude verses with references that are non-quotations"
       option :sep,     :type => :string,  :default => " ",
              :description => "separator between annotations and content, defaults to ' '"
       option :linesep, :type => :string,  :default => "\n",
@@ -173,7 +175,8 @@ module BomDB
           edition: options[:edition],
           range: range,
           search: options[:search],
-          exclude: options[:exclude]
+          exclude: options[:exclude],
+          exclude_only_quotations: options[:"exclude-only-quotations"]
         ).print(
           verse_format: verse_format,
           body_format: body_format,
@@ -232,8 +235,16 @@ module BomDB
             map { |r| "#{r[:ref_name]} (#{r[:count]} refs)" }
           puts rts.join("\n")
         else
-          rts = BomDB.db[:refs].where(:ref_name => type).
-            map{ |r| "#{r[:ref_book]} #{r[:ref_chapter]}:#{r[:ref_verse]}" }
+          rts = BomDB.db[:refs].
+            where(:ref_name => type).
+            join(:verses, :verse_id => :verse_id).
+            join(:books, :book_id => :book_id).
+            map do |r|
+              asterisk = r[:ref_is_quotation] ? '*' : ''
+              "#{r[:ref_book]} #{r[:ref_chapter]}:#{r[:ref_verse]} => " +
+              "#{r[:book_name]} #{r[:verse_chapter]}:#{r[:verse_number]}" +
+              "#{asterisk}"
+            end
           puts rts.join("\n")
         end
       end

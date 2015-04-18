@@ -2,11 +2,12 @@ require 'bomdb/models/edition'
 
 module BomDB
   class Query
-    def initialize(edition: 1829, range: nil, search: nil, exclude: nil, headings: false)
+    def initialize(edition: 1829, range: nil, search: nil, exclude: nil, exclude_only_quotations: false, headings: false)
       @edition = edition
       @range = range
       @search = search
       @exclude = exclude
+      @exclude_only_quotations = exclude_only_quotations
       @headings = headings
     end
 
@@ -36,6 +37,9 @@ module BomDB
       if @exclude
         excluded_verse_ids = db[:refs].select(:verse_id).
           where(:ref_name => @exclude.split(/\s*,\s*/))
+        if @exclude_only_quotations
+          excluded_verse_ids.where!(ref_is_quotation: true)
+        end
         q.exclude!(:verses__verse_id => excluded_verse_ids)
       end
       q
@@ -93,12 +97,16 @@ module BomDB
           io.print sep
         end
         begin
-          io.print body_format[ row[:content_body] ]
+          content_body = row[:content_body]
+          if @search
+            content_body.gsub!(@search, @search.red)
+          end
+          io.print body_format[ content_body ]
         rescue TypeError
           next
         end
       end
-      io.puts "Nothing shown" unless shown
+      io.puts "Nothing to show" unless shown
     end
   end
 end
