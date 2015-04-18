@@ -60,6 +60,33 @@ Mosiah 5:2 And they all cried with one voice, saying: Yea, we believe...
 Mosiah 5:6 And now these are the words which king Benjamin desired of them...
 ```
 
+You can also search for specific terms in the Book of Mormon. Let's search for 'whoso' in 3rd Nephi:
+
+```bash
+$ bomdb show --search 'whoso' '3 Nephi 1-30'
+```
+
+This results in color-highlighted results:
+
+<p><span style="color:#9fa01c">3 Nephi</span><span style="color:#050505">
+</span><span style="color:#2fb41d">9</span><span style="color:#050505">:</span><span style="color:#2fe71a">14</span><span style="color:#050505">
+Yea, verily I say unto you: If ye will come unto me, ye shall have
+eternal life. Behold, mine arm of mercy is extended towards you. And
+</span><span style="color:#b42419;font-weight:bold">whoso</span><span style="color:#050505">ever
+will come, him will I receive. And blessed are they which cometh unto
+me.</span></p>
+<p><span style="color:#9fa01c">3 Nephi</span><span style="color:#050505">
+</span><span style="color:#2fb41d">9</span><span style="color:#050505">:</span><span style="color:#2fe71a">20</span><span style="color:#050505">
+And ye shall offer for a sacrifice unto me a broken heart and a
+contrite spirit. And </span><span style="color:#b42419;font-weight:bold">whoso</span><span style="color:#050505">
+cometh unto me with a broken heart and a contrite spirit, him will I
+baptize with fire and with the Holy Ghost, even as the Lamanites
+because of their faith in me at the time of their conversion were
+baptized with fire and with the Holy Ghost--and they knew it not.</span></p>
+
+[ ... 27 results skipped in this example ... ]
+
+
 ### IMPORT and EXPORT portions of the database
 
 You can import and export any part of the database, such as the books, verses, editions, and contents (text) of the database.
