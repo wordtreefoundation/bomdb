@@ -69,6 +69,7 @@ $ bomdb show --search 'whoso' '3 Nephi 1-30'
 This shows a color-highlighted result set (note: github markdown does not show color):
 
 3 Nephi 9:14 Yea, verily I say unto you: If ye will come unto me, ye shall have eternal life. Behold, mine arm of mercy is extended towards you. And **whoso**ever will come, him will I receive. And blessed are they which cometh unto me.
+
 3 Nephi 9:20 And ye shall offer for a sacrifice unto me a broken heart and a contrite spirit. And **whoso** cometh unto me with a broken heart and a contrite spirit, him will I baptize with fire and with the Holy Ghost, even as the Lamanites because of their faith in me at the time of their conversion were baptized with fire and with the Holy Ghost--and they knew it not.
 
 
