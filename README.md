@@ -2,6 +2,8 @@
 
 BomDB is a command-line tool (packaged as a Ruby gem) that provides multiple editions of the Book of Mormon in machine-readable form. At its heart is a sqlite3 database--data can be imported or exported using various formats and options.
 
+See the blog post [DIY Mosiah Priority with BomDB](http://blog.wordtree.org/2015/04/17/diy-mosiah-priority/) for further example usage.
+
 ## Usage
 
 ### SHOW a formatted edition of the Book of Mormon
