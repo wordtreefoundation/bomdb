@@ -72,13 +72,13 @@ This shows a color-highlighted result set (note: github markdown does not show c
 </span><span style="color:#2fb41d">9</span><span style="color:#050505">:</span><span style="color:#2fe71a">14</span><span style="color:#050505">
 Yea, verily I say unto you: If ye will come unto me, ye shall have
 eternal life. Behold, mine arm of mercy is extended towards you. And
-</span><span style="color:#b42419;font-weight:bold">whoso</span><span style="color:#050505">ever
+</span><span style="color:#b42419;font-weight:bold">**whoso**</span><span style="color:#050505">ever
 will come, him will I receive. And blessed are they which cometh unto
 me.</span></p>
 <p><span style="color:#9fa01c">3 Nephi</span><span style="color:#050505">
 </span><span style="color:#2fb41d">9</span><span style="color:#050505">:</span><span style="color:#2fe71a">20</span><span style="color:#050505">
 And ye shall offer for a sacrifice unto me a broken heart and a
-contrite spirit. And </span><span style="color:#b42419;font-weight:bold">whoso</span><span style="color:#050505">
+contrite spirit. And </span><span style="color:#b42419;font-weight:bold">**whoso**</span><span style="color:#050505">
 cometh unto me with a broken heart and a contrite spirit, him will I
 baptize with fire and with the Holy Ghost, even as the Lamanites
 because of their faith in me at the time of their conversion were
