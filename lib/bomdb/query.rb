@@ -35,8 +35,12 @@ module BomDB
         q.where!(Sequel.like(Sequel.function(:LOWER, :content_body), "%#{@search.downcase}%"))
       end
       if @exclude
-        excluded_verse_ids = db[:refs].select(:verse_id).
-          where(:ref_name => @exclude.split(/\s*,\s*/))
+        excluded_ref_names = @exclude.split(/\s*,\s*/).map do |name|
+          Sequel.like(:ref_name, "#{name}%")
+        end
+        excluded_verse_ids = db[:refs].
+          select(:verse_id).
+          where(excluded_ref_names)
         if @exclude_only_quotations
           excluded_verse_ids.where!(ref_is_quotation: true)
         end
