@@ -284,6 +284,43 @@ module BomDB
       end
 
 
+      class Chapter
+        attr_reader :wordcount, :book, :chapter
+        def initialize(wordcount, book, chapter)
+          @wordcount, @book, @chapter = wordcount, book, chapter
+        end
+      end
+
+      desc "index WORDGROUP", "create an index into the books of the Book of Mormon counting by WORDGROUP"
+      def index(wordgroup)
+        wordgroup = wordgroup.to_i
+
+        chapters = BomDB::Query.new.chapters.map do |(book, chapter), content|
+          Chapter.new(content.split(/\s+/).size, book, chapter)
+        end
+
+        total_words = chapters.inject(0){ |sum, ch| sum += ch.wordcount }
+
+        idx = []
+        words_so_far = 0
+        chapter_index = 0
+        j = 0
+
+        (wordgroup..(total_words+wordgroup)).step(wordgroup) do |i|
+          while words_so_far < i && chapter_index < chapters.size
+            words_so_far += chapters[chapter_index].wordcount
+            chapter_index += 1
+          end
+          c = chapters[chapter_index-1]
+          idx << ["#{c.book} #{c.chapter}", j]
+          # puts "[#{chapters[chapter_index-1].book} #{chapters[chapter_index-1].chapter},#{j}"
+          j += 1
+        end
+
+        puts idx.to_json
+      end
+
+
 
       private
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bomdb (0.6.1)
+    bomdb (0.6.2)
       colorize (~> 0.7)
       constellation (~> 0.1)
       levenshtein-ffi (~> 1.1)
@@ -66,3 +66,6 @@ DEPENDENCIES
   byebug (~> 4.0)
   rake (~> 10.0)
   rspec (~> 3.2)
+
+BUNDLED WITH
+   1.10.4
