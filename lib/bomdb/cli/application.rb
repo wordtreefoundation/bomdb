@@ -138,6 +138,8 @@ module BomDB
              :description => "separator between verses. Defaults to newline ('\\n')."
       option :color,   :type => :boolean, :default => true,
              :description => "show chapter and verse in color"
+      option :markdown,:type => :boolean, :default => false,
+             :description => "show chapter and verse in markdown format"
       option :"for-alignment", :type => :boolean, :default => false,
              :description => "show output in 'alignment' mode. Useful for debugging 'align' subcommand issues."
       option :clean,   :type => :boolean, :default => false,
@@ -149,7 +151,7 @@ module BomDB
       def show(range = nil)
         body_format = nil
         wordsep = options[:sep]
-        linesep = options[:linesep]
+        linesep = options[:linesep].gsub("\\n", "\n")
 
         if options[:"for-alignment"]
           linesep = " "
@@ -162,7 +164,11 @@ module BomDB
           end
         else
           if options[:verses]
-            if options[:color]
+            if options[:markdown]
+              verse_format = lambda do |b,c,v|
+                '**' + b + wordsep + c.to_s + ':' + v.to_s + '**'
+              end
+            elsif options[:color]
               verse_format = lambda do |b,c,v|
                 b.colorize(:yellow) + wordsep + 
                 c.to_s.colorize(:green) + ':' + 
