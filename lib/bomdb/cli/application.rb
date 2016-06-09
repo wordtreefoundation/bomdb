@@ -8,6 +8,10 @@ module BomDB
     class Application < Thor
 
 
+      desc "version", "show the version of bomdb"
+      def version
+        puts BomDB::VERSION
+      end
 
       desc "import FILE", "import data from FILE into database, e.g. books.json"
       option :type,    :type => :string, :default => nil,
