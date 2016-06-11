@@ -6,7 +6,9 @@ module BomDB
       def export_json
         books = []
         select_books.each do |b|
-          books << JSON::generate([ b[:book_name], b[:book_group], b[:book_sort] ], array_nl: ' ')
+          fields = [ b[:book_name], b[:book_group], b[:book_sort] ]
+          fields << @db[:verses].where(:book_id => b[:book_id]).max(:verse_chapter)
+          books << JSON::generate(fields, array_nl: ' ')
         end
         Export::Result.new(success: true, body: "[\n  " + books.join(",\n  ") + "\n]\n")
       end
