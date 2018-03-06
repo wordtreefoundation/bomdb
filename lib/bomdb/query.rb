@@ -21,18 +21,22 @@ module BomDB
       q = db[:verses].
         join(:books, :book_id => :book_id).
         join(:editions).
-        join(:contents, :edition_id => :edition_id, :verse_id => :verses__verse_id).
+        join(:contents, :edition_id => :edition_id, :verse_id => Sequel.qualify("verses", "verse_id")).
         order(:book_sort, :verse_heading, :verse_chapter, :verse_number).
         select(:book_name, :verse_chapter, :verse_number, :content_body)
-      q.where!(:editions__edition_id => edition[:edition_id]) if @edition
-      q.where!(:verse_heading => nil) unless @headings
+      if @edition
+        q = q.where(Sequel.qualify("editions", "edition_id") => edition[:edition_id])
+      end
+      if not @headings
+        q = q.where(:verse_heading => nil)
+      end
       if @range
         pericope = Mericope.new(@range)
         pairs = pericope.ranges.map{ |r| [:verse_range_id, r] }
-        q.where!(Sequel::SQL::BooleanExpression.from_value_pairs(pairs, :OR))
+        q = q.where(Sequel::SQL::BooleanExpression.from_value_pairs(pairs, :OR))
       end
       if @search
-        q.where!(Sequel.like(Sequel.function(:LOWER, :content_body), "%#{@search.downcase}%"))
+        q = q.where(Sequel.like(Sequel.function(:LOWER, :content_body), "%#{@search.downcase}%"))
       end
       if @exclude
         excluded_ref_names = @exclude.split(/\s*,\s*/).map do |name|
@@ -40,11 +44,11 @@ module BomDB
         end
         excluded_verse_ids = db[:refs].
           select(:verse_id).
-          where(excluded_ref_names)
+          where(Sequel.&(excluded_ref_names))
         if @exclude_only_quotations
-          excluded_verse_ids.where!(ref_is_quotation: true)
+          excluded_verse_ids = excluded_verse_ids.where(ref_is_quotation: true)
         end
-        q.exclude!(:verses__verse_id => excluded_verse_ids)
+        q = q.exclude(Sequel.qualify("verses", "verse_id") => excluded_verse_ids)
       end
       q
     end

@@ -1,5 +1,4 @@
 require 'rspec'
-require 'byebug'
 require 'tmpdir'
 
 require_relative '../lib/bomdb'

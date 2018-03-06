@@ -12,15 +12,36 @@ describe BomDB::Query do
     end
 
     context "with schema" do
-      before do
-        BomDB::Schema.create_tables(BomDB.db)
-      end
+      let(:db) { BomDB.db }
 
       context "with data" do
-        # let(:book_id) { BomDB.db[:books].insert(book_name: "1 Nephi") }
-        # let(:verse1) { BomDB.db[:verses].insert(book_id: book_id, verse_chapter: 1, verse_number: 1) }
-        # let(:verse2) { BomDB.db[:verses].insert(book_id: book_id, verse_chapter: 1, verse_number: 2) }
-        # let(:edition1) { BomDB.db[:editions].insert() }
+        let(:data) { BomDB::Query.new(exclude: 'Bible-OT') }
+
+        it "queries wherefore/therefore" do
+          result = data.books.map do |book,content|
+            [ book,
+              content.scan(/wherefore/i).size,
+              content.scan(/therefore/i).size ]
+          end
+
+          expect(result).to match([
+            ["1 Nephi", 99, 13],
+            ["2 Nephi", 126, 6],
+            ["Jacob", 53, 1],
+            ["Enos", 6, 0],
+            ["Jarom", 3, 0],
+            ["Omni", 6, 0],
+            ["Words of Mormon", 5, 0],
+            ["Mosiah", 0, 122],
+            ["Alma", 3, 288],
+            ["Helaman", 0, 63],
+            ["3 Nephi", 3, 97],
+            ["4 Nephi", 0, 5],
+            ["Mormon", 0, 22],
+            ["Ether", 63, 26],
+            ["Moroni", 38, 0]
+          ])
+        end
       end
     end
   end

@@ -205,7 +205,7 @@ module BomDB
       def editions
         BomDB.db[:editions].
           left_outer_join(:contents, :edition_id => :edition_id).
-          select_group(:editions__edition_id, :edition_name).
+          select_group(Sequel.qualify("editions", "edition_id"), :edition_name).
           select_append{ Sequel.as(count(:verse_id), :count) }.
           order(:edition_name).
         each do |r|

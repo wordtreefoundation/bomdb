@@ -75,7 +75,7 @@ module BomDB
       def edition_query
         @db[:editions].
           left_outer_join(:contents, :edition_id => :edition_id).
-          select_group(:editions__edition_id, :edition_year, :edition_name).
+          select_group(Sequel.qualify("editions", "edition_id"), :edition_year, :edition_name).
           select_append{ Sequel.as(count(:verse_id), :count) }.
           having{ count > 0 }.
           order(:edition_name)
@@ -85,10 +85,10 @@ module BomDB
         @db[:verses].
           join(:books, :book_id => :book_id).
           join(:editions).
-          join(:contents, :edition_id => :edition_id, :verse_id => :verses__verse_id).
+          join(:contents, :edition_id => :edition_id, :verse_id => Sequel.qualify("verses", "verse_id")).
           order(:book_sort, :verse_heading, :verse_chapter, :verse_number).
-          select(:editions__edition_id, :book_name, :verse_chapter, :verse_number, :content_body).
-          where(:editions__edition_id => edition_ids).
+          select(Sequel.qualify("editions", "edition_id"), :book_name, :verse_chapter, :verse_number, :content_body).
+          where(Sequel.qualify("editions", "edition_id") => edition_ids).
           where(:verse_heading => nil)
       end
 
