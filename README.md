@@ -269,7 +269,9 @@ end
 
 ## Installation
 
-Ruby 2.1 is required. You should also have a normal build environment set up, e.g. command line tools on the mac, or GCC on Linux.
+Ruby 2.1 is required. You should also have a normal build environment set up, e.g. command line tools on the mac, or GCC on Linux in order to build native dependencies such as `ffi`, `levenshtein-ffi`, `sqlite3`, `text)clean`, and `byebug`.
+
+You may need to install sqlite3 dev dependencies. e.g. on Ubuntu: `sudo apt install libsqlite3-dev`
 
 To install BomDB for use on the command line, use `gem install`:
 
