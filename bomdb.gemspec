@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.bindir        = "bin"
 
-  spec.add_dependency 'sequel',              '~> 4.49'
-  spec.add_dependency 'sqlite3',             '~> 1.4'
+  spec.add_dependency 'sequel',              '~> 5.68'
+  spec.add_dependency 'sqlite3',             '~> 1.6'
   spec.add_dependency 'thor',                '~> 0.20'
   spec.add_dependency 'constellation',       '~> 0.1'
   spec.add_dependency 'colorize',            '~> 0.7'
