@@ -1,5 +1,5 @@
 require 'strscan'
-require 'levenshtein'
+require 'damerau-levenshtein'
 
 module BomDB
   module Diff
@@ -35,8 +35,8 @@ module BomDB
             # the insertion.
 
             candidates = (0..(insertion.size-1)).map do |i|
-              d1 = Levenshtein.distance(del_before, insertion[0..i])
-              d2 = Levenshtein.distance(del_after, insertion[(i + 1)..-1])
+              d1 = DamerauLevenshtein.distance(del_before, insertion[0..i])
+              d2 = DamerauLevenshtein.distance(del_after, insertion[(i + 1)..-1])
               d3 = insertion[i] == ' ' ? 1 : 0
               [ d1 + d2 + d3, insertion[0..i].chomp, insertion[(i + 1)..-1].chomp ]
             end.sort_by{ |a| a.first }
