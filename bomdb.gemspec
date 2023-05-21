@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["duane.johnson@gmail.com"]
   spec.summary       = %q{Book of Mormon Database}
   spec.description   = %q{A command-line queryable database of multiple editions of the Book of Mormon}
-  spec.homepage      = "http://bomdb.wordtree.org"
+  spec.homepage      = "https://github.com/wordtreefoundation/bomdb"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject{ |f| f =~ %r|data/.*\.json| }
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'sequel',              '~> 5.68'
   spec.add_dependency 'sqlite3',             '~> 1.6'
-  spec.add_dependency 'thor',                '~> 0.20'
+  spec.add_dependency 'thor',                '~> 1.2'
   spec.add_dependency 'constellation',       '~> 0.1'
   spec.add_dependency 'colorize',            '~> 0.7'
   spec.add_dependency 'text_clean',          '~> 0'
